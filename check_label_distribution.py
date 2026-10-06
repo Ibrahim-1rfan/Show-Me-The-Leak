@@ -3,7 +3,7 @@ Quick sanity check on manifest.csv: label frequency, safe/unsafe ratio,
 labels-per-image stats. Run after reconcile_vispr.py.
 
 Usage:
-    python check_label_distribution.py --manifest /path/to/reconciled/manifest.csv
+    python check_label_distribution.py --manifest D:\\Github\\Show-Me-The-Leak\\manifest.csv
 """
 
 import argparse

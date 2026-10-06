@@ -3,7 +3,7 @@ Category-level distribution check on manifest_with_categories.csv.
 Run after apply_crosswalk.py.
 
 Usage:
-    python check_category_distribution.py --manifest /path/to/manifest_with_categories.csv
+    python check_category_distribution.py --manifest D:\\Github\\Show-Me-The-Leak\\manifest_with_categories.csv
 """
 
 import argparse

@@ -4,10 +4,10 @@ manifest with an added 'categories' column (the deduplicated, mapped
 category labels for each image).
 
 Usage:
-    python apply_crosswalk.py \
-        --manifest /path/to/reconciled/manifest.csv \
-        --crosswalk /path/to/taxonomy_crosswalk.csv \
-        --output /path/to/reconciled/manifest_with_categories.csv
+    python apply_crosswalk.py 
+        --manifest D:\\Github\\Show-Me-The-Leak\\manifest.csv 
+        --crosswalk D:\\Github\\Show-Me-The-Leak\\taxonomy_crosswalk.csv
+        --output D:\\Github\\Show-Me-The-Leak\\manifest_with_categories.csv
 """
 
 import argparse

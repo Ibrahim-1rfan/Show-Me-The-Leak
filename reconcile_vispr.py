@@ -19,9 +19,9 @@ What it does:
        - duplicate_groups.csv  -> groups of near-duplicate images (for review)
 
 Usage:
-    python reconcile_vispr.py --images_root /path/to/dataset_root \
-                               --jsons_dir  /path/to/dataset_root/test2017_jsons \
-                               --output_dir /path/to/dataset_root/reconciled
+    python reconcile_vispr.py --images_root D:\\Github\\Show-Me-The-Leak 
+                               --jsons_dir  D:\\Github\\Show-Me-The-Leak 
+                               --output_dir D:\\Github\\Show-Me-The-Leak  
 
 `--images_root` should be the folder that CONTAINS test2017-01 .. test2017-09
 (the script auto-discovers any subfolder starting with "test2017-").
@@ -43,7 +43,7 @@ IMG_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif"}
 def find_image_folders(images_root: Path):
     folders = sorted(
         p for p in images_root.iterdir()
-        if p.is_dir() and p.name.startswith("test2017-")
+        if p.is_dir() and p.name.startswith("train2017-")
     )
     if not folders:
         # fallback: maybe images_root itself is flat
