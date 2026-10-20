@@ -1,0 +1,69 @@
+attribute_id,vispr_native_group,description,taxonomy_category
+a0_safe,Safe,Safe,Safe
+a1_age_approx,Personal Description,Age Group,Personal Metadata
+a2_weight_approx,Personal Description,Weight Group,Personal Metadata
+a3_height_approx,Personal Description,Height Group,Personal Metadata
+a4_gender,Personal Description,Gender,Personal Metadata
+a5_eye_color,Personal Description,Eye Color,Biometric Data
+a6_hair_color,Personal Description,Hair Color,Biometric Data
+a7_fingerprint,Personal Description,Fingerprint,Biometric Data
+a8_signature,Personal Description,Signature,Biometric Data
+a9_face_complete,Personal Description,Face (Complete),Biometric Data
+a10_face_partial,Personal Description,Face (Partial),Biometric Data
+a11_tattoo,Personal Description,Tattoo,Biometric Data
+a12_semi_nudity,Personal Description,Semi-nudity,Legal Sensitivity Info
+a13_full_nudity,Personal Description,Complete nudity,Legal Sensitivity Info
+a16_race,Personal Description,Race,Personal Metadata
+a17_color,Personal Description,Skin Color,Personal Metadata
+a18_ethnic_clothing,Personal Description,Traditional clothing,Personal Metadata
+a19_name_full,Personal Description,Full Name,Legal Identifiers
+a20_name_first,Personal Description,First Name,Legal Identifiers
+a21_name_last,Personal Description,Last Name,Legal Identifiers
+a23_birth_city,Personal Description,Place of Birth,Legal Identifiers
+a24_birth_date,Personal Description,Date of Birth,Legal Identifiers
+a25_nationality,Personal Description,Nationality,Legal Identifiers
+a26_handwriting,Personal Description,Handwriting,Biometric Data
+a27_marital_status,Personal Description,Marital status,Personal Metadata
+a29_ausweis,Documents,National Identification,Legal Identifiers
+a30_credit_card,Documents,Credit Card,Financial Information
+a31_passport,Documents,Passport,Legal Identifiers
+a32_drivers_license,Documents,Drivers License,Legal Identifiers
+a33_student_id,Documents,Student ID,Legal Identifiers
+a35_mail,Documents,Mail,Legal Identifiers
+a37_receipt,Documents,Receipts,Financial Information
+a38_ticket,Documents,Tickets,Financial Information
+a39_disability_physical,Health,Physical disability,HIPAA Data
+a41_injury,Health,Medical Treatment,HIPAA Data
+a43_medicine,Health,Medical History,HIPAA Data
+a46_occupation,Employment,Occupation,Personal Metadata
+a48_occassion_work,Employment,Work Occassion,Personal Context
+a49_phone,Personal Life,Phone number,Digital Identifiers
+a55_religion,Personal Life,Religion,Personal Metadata
+a56_sexual_orientation,Personal Life,Sexual Orientation,Personal Metadata
+a57_culture,Personal Life,Culture,Personal Metadata
+a58_hobbies,Personal Life,Hobbies,Personal Context
+a59_sports,Personal Life,Sports,Personal Context
+a60_occassion_personal,Personal Life,Personal Occassion,Personal Context
+a61_opinion_general,Personal Life,General Opinion,Personal Context
+a62_opinion_political,Personal Life,Political Opinion,Personal Metadata
+a70_education_history,Personal Life,Education history,Personal Metadata
+a99_legal_involvement,Personal Life,Legal involvement,Legal Sensitivity Info
+a64_rel_personal,Relationship,Personal Relationships,Personal Context
+a65_rel_social,Relationship,Social Circle,Personal Context
+a66_rel_professional,Relationship,Professional Circle,Personal Context
+a67_rel_competitors,Relationship,Competitors,Background Individuals
+a68_rel_spectators,Relationship,Spectators,Background Individuals
+a69_rel_views,Relationship,Similar view,Personal Context
+a73_landmark,Whereabouts,Visited Landmark or Street Sign,Location Identifiers
+a74_address_current_complete,Whereabouts,Visited Location (Complete),GPS Data
+a75_address_current_partial,Whereabouts,Visited Location (Partial),Location Identifiers
+a78_address_home_complete,Whereabouts,Home address (Complete),GPS Data
+a79_address_home_partial,Whereabouts,Home address (Partial),Location Identifiers
+a82_date_time,Whereabouts,Date/Time of Activity,GPS Data
+a85_username,Internet,Username,Digital Identifiers
+a90_email,Internet,Email address,Digital Identifiers
+a92_email_content,Internet,Email content,Digital Identifiers
+a97_online_conversation,Internet,Online conversations,Digital Identifiers
+a102_vehicle_ownership,Automobile,Vehicle Ownership,Vehicle Information
+a103_license_plate_complete,Automobile,License Plate (Complete),Vehicle Information
+a104_license_plate_partial,Automobile,License Plate (Partial),Vehicle Information

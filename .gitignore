@@ -19998,3 +19998,25 @@ train2017/2017_99992296.jpg
 train2017/2017_99992296.json
 train2017/2017_99998242.jpg
 train2017/2017_99998242.json
+
+# v2 generated/private artifacts (legacy entries retained)
+train2017/
+train2017.zip
+data/
+results/
+logs/
+dist/
+.model_cache/
+.environments/
+.benchmark_envs/
+benchmark_model_cache/
+Leak_Benchmark_Results/
+__pycache__/
+*.pyc
+tmp/
+.env
+.env.*
+*credentials*.json
+upload.py
+upload_revised.py
+upload dataset.py

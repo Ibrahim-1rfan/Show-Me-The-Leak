@@ -1,0 +1,74 @@
+[
+  {
+    "model_key": "qwen3_vl",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\qwen3_vl\\20261008T220523322813Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  },
+  {
+    "model_key": "qwen25_vl",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\qwen25_vl\\20261008T224105647016Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  },
+  {
+    "model_key": "llama32_vision",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\llama32_vision\\20261008T225525744688Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  },
+  {
+    "model_key": "chandra",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\chandra\\20261009T001011679460Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  },
+  {
+    "model_key": "dots_ocr",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\dots_ocr\\20261009T020346252197Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  },
+  {
+    "model_key": "florence2",
+    "run_directory": "D:\\Github\\Show-Me-The-Leak\\Leak_Benchmark_Results\\outputs\\multimodel_pii\\sample_50_1df1d1c206ae\\florence2\\20261009T032940029641Z",
+    "rows": 50,
+    "protocol_id": "86693622effb368a7c2c125bf470c44f9a4cd9ba1ae03fddd7add1847a475d93",
+    "protocol_match": "exact",
+    "helper_sha256": {
+      "benchmark_adapters.py": "e1d5cf9e258afa6430b0d495cf276f617c47068f0653d44b1038cdc31336cbb9",
+      "benchmark_ocr_adapters.py": "bf4351a97ff42310a42be32f0dab3bae570011413ddbdbeab17c909d6e295dec",
+      "benchmark_workflow.py": "63e7c7c2ab4c2968db6f821623f847019a58cb0efbf24950670de8f74f6c3fd0"
+    }
+  }
+]

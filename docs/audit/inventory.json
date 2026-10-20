@@ -1,0 +1,240 @@
+[
+  {
+    "path": ".gitignore",
+    "kind": "file",
+    "bytes": 569998,
+    "sha256": "dcdf5d39baec77957fc7450bc85888d8308e586599bb84a9f9f1fc907ed1e15e",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": ".vscode",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "__pycache__",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "apply_crosswalk.py",
+    "kind": "file",
+    "bytes": 2517,
+    "sha256": "74b60ddab13d823100493172355f71343d0fa2c3529491cde9e8698f8dda0f8c",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_adapters.py",
+    "kind": "file",
+    "bytes": 21331,
+    "sha256": "1cc49ef58d3e18d41915f1dff0dabcb1a56c62c8e55bb12bf7c195569712efe9",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_environment.py",
+    "kind": "file",
+    "bytes": 5532,
+    "sha256": "48ddd819082b671d6e22c5ca22470348a646ac5a6ee3c7a5a970b0733c84541f",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_metrics.py",
+    "kind": "file",
+    "bytes": 24686,
+    "sha256": "0de6b05464e12f1aa6608cbb0638e9af984f860857f148e7f68a85a43e459d80",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_ocr_adapters.py",
+    "kind": "file",
+    "bytes": 24417,
+    "sha256": "31b62f427fcd8c8365c04d876e5c2c91954c3fa23aeb67b98b007e52dd37d69c",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_pipeline.py",
+    "kind": "file",
+    "bytes": 18335,
+    "sha256": "48ebd8ada799ecad6d1c0eb3dba874d29c1092c9acac58fc23e935399df471c7",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "BENCHMARK_README.md",
+    "kind": "file",
+    "bytes": 7688,
+    "sha256": "21c4ceca35cd2efb7b41499b2c663493ad29e3ba112f7a91ed6bc9a1327139b0",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_worker.py",
+    "kind": "file",
+    "bytes": 3700,
+    "sha256": "50da1c39f23a89769baf58ec693dfb58d79d99ba5a55e3c75d54a79896be8517",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "benchmark_workflow.py",
+    "kind": "file",
+    "bytes": 20010,
+    "sha256": "6cc8678a21603d914073527199d12037a37d013d9cfb7ed006b81e72ced9ff04",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "check_category_distribution.py",
+    "kind": "file",
+    "bytes": 1662,
+    "sha256": "fb3380457ef63bc2e45fcb66e17f1731181229e575235da8ed08befe00d60df8",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "check_label_distribution.py",
+    "kind": "file",
+    "bytes": 2739,
+    "sha256": "d1f09418d254a5407f51a6135dd2fcad987e73aeffad84854af8be946117a19a",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "docs",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "duplicate_groups.csv",
+    "kind": "file",
+    "bytes": 65,
+    "sha256": "3c76c67230cdfb2b35d3e30b0535db6ad8fa67135e8cbb9b1c81da8b7e884945",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "issues_report.csv",
+    "kind": "file",
+    "bytes": 97,
+    "sha256": "5f721640fa56f29e0385ca2313c03c313bde7b9ca25c4075289c1f09a6e67e38",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "Leak_Benchmark_Results",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "manifest.csv",
+    "kind": "file",
+    "bytes": 2462454,
+    "sha256": "91030d8f36f6f94d8799b7d605f9c947f49fc99725a7117b34113828f27217dd",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "manifest_with_categories.csv",
+    "kind": "file",
+    "bytes": 2796523,
+    "sha256": "322766bec768c5c766dff1de306a85d55a9391236977fe3b899bf42ee740da14",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "Model_Testing.ipynb",
+    "kind": "file",
+    "bytes": 224141,
+    "sha256": "7f632f0baf4c42998f46442d15abe1ec8a376f8c2d112c65982761978c648324",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "output",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "outputs",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "reconcile_vispr.py",
+    "kind": "file",
+    "bytes": 10174,
+    "sha256": "d14c2a8e8c28ceb9decbfbe4fb03834951895f65b74af28fa2e3ef701b7a06be",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "scripts",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "taxonomy_crosswalk.csv",
+    "kind": "file",
+    "bytes": 4447,
+    "sha256": "ed90c544c6f9bee1608c1ff86c7f2af0ea7aa447d2212803e17ad359ca97b74b",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "tests",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "tmp",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "tools",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "train2017",
+    "kind": "directory",
+    "bytes": null,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "train2017.zip",
+    "kind": "file",
+    "bytes": 22400164976,
+    "sha256": null,
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "upload dataset.py",
+    "kind": "file",
+    "bytes": 675,
+    "sha256": "c08652143e85be10aa1dd274b0cb46a38b28701a0b550ba7212bb9aa4b20de2b",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "upload.py",
+    "kind": "file",
+    "bytes": 1723,
+    "sha256": "6db0cba7b81dd3d51de6636a99716553c133acc50142e61360430092dab751b2",
+    "action": "retain; no deletion or relocation in initial migration"
+  },
+  {
+    "path": "upload_revised.py",
+    "kind": "file",
+    "bytes": 2082,
+    "sha256": "21712c4ae229aa8372ad6ee6cfb154136a5fecce07b1c04e818c2bd3768ccade",
+    "action": "retain; no deletion or relocation in initial migration"
+  }
+]

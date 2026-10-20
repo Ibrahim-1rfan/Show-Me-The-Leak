@@ -413,6 +413,47 @@ DOTS_LAYOUT_PROMPT = """Please output the layout information from the PDF image,
 """
 
 
+def load_dots_processor(model_path):
+    """Preserve dots' image preprocessing/template while satisfying TF 4.56.1.
+
+    The checkpoint's DotsVLProcessor constructor drops video_processor when
+    calling its Qwen2.5 parent. Adding a kwarg to AutoProcessor cannot fix it.
+    Assemble the same parent explicitly; the video component is unused for our
+    still-image task. Never change the checkpoint's custom <|imgpad|> token.
+    """
+    from transformers import (AutoTokenizer, Qwen2VLImageProcessor,
+                              Qwen2_5_VLProcessor, Qwen2_5_VLVideoProcessor)
+    model_path = Path(model_path)
+    template = json.loads((model_path / 'chat_template.json').read_text(encoding='utf-8'))['chat_template']
+    if not isinstance(template, str) or '<|imgpad|>' not in template:
+        raise ValueError('Unexpected dots chat template; refusing a substituted image format')
+    tokenizer = AutoTokenizer.from_pretrained(str(model_path), trust_remote_code=True)
+    image_processor = Qwen2VLImageProcessor.from_pretrained(str(model_path))
+    processor = Qwen2_5_VLProcessor(
+        image_processor=image_processor, tokenizer=tokenizer,
+        video_processor=Qwen2_5_VLVideoProcessor(), chat_template=template)
+    processor.image_token = '<|imgpad|>'
+    processor.image_token_id = tokenizer.convert_tokens_to_ids(processor.image_token)
+    if processor.image_token_id != 151665:
+        raise ValueError('Unexpected dots image token ID; expected 151665')
+    return processor
+
+
+def check_dots_image_processor(processor):
+    """Exercise the real image/token path before allocating model weights."""
+    from PIL import Image
+    image = Image.new('RGB', (56, 56), 'white')
+    messages = [{'role': 'user', 'content': [
+        {'type': 'image', 'image': image}, {'type': 'text', 'text': 'Read the image.'}]}]
+    text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    inputs = processor(text=[text], images=[image], return_tensors='pt')
+    grid = inputs['image_grid_thw'][0]
+    expected = int(grid.prod()) // processor.image_processor.merge_size ** 2
+    actual = int((inputs['input_ids'] == processor.image_token_id).sum())
+    if expected <= 0 or actual != expected:
+        raise RuntimeError(f'dots image token/grid mismatch: {actual} tokens for {expected} patches')
+
+
 class DotsOCRAdapter(_GPUOCRAdapter):
     def __init__(self, model_id="rednote-hilab/dots.ocr", max_new_tokens=8192,
                  max_input_edge=1280, load_in_4bit=False, revision=None,
@@ -425,7 +466,7 @@ class DotsOCRAdapter(_GPUOCRAdapter):
         _require_version("transformers", "4.56.1")
         import torch
         from huggingface_hub import HfApi, snapshot_download
-        from transformers import AutoModelForCausalLM, AutoProcessor
+        from transformers import AutoModelForCausalLM
         if (not torch.cuda.is_available() or torch.cuda.get_device_capability()[0] < 8
                 or not torch.cuda.is_bf16_supported()):
             raise RuntimeError("dots.ocr needs a BF16-capable GPU (A100/L4/Ampere+), not a T4, for this official Flash Attention profile")
@@ -439,11 +480,12 @@ class DotsOCRAdapter(_GPUOCRAdapter):
         self.revision = HfApi().model_info(model_id, revision=revision).sha
         model_path = snapshot_download(repo_id=model_id, revision=self.revision, local_dir=str(local_dir))
         try:
+            self.processor = load_dots_processor(model_path)
+            check_dots_image_processor(self.processor)
             self.model = AutoModelForCausalLM.from_pretrained(
                 model_path, trust_remote_code=True, attn_implementation="flash_attention_2",
                 torch_dtype=torch.bfloat16, device_map="auto")
             self.model.eval()
-            self.processor = AutoProcessor.from_pretrained(model_path, trust_remote_code=True)
         except Exception:
             self.close()
             raise
@@ -453,6 +495,7 @@ class DotsOCRAdapter(_GPUOCRAdapter):
         raw, input_size, metadata = self._generate(image, DOTS_LAYOUT_PROMPT)
         result = parse_dots_output(raw, original_size, input_size)
         result["metadata"].update(metadata)
+        result["metadata"]["processor_compatibility"] = "explicit_qwen25_components_with_dots_image_token"
         return result
 
 

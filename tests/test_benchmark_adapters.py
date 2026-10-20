@@ -114,7 +114,8 @@ class AdapterTests(unittest.TestCase):
                 loader = getattr(tf, adapters.MODEL_SPECS[key]["class_name"])
                 loader.from_pretrained.side_effect = RuntimeError("simulated CUDA out of memory")
                 instance = adapter_class.__new__(adapter_class)
-                with patch.object(adapters, "_runtime", return_value=(torch, tf)):
+                with patch.object(adapters, "_runtime", return_value=(torch, tf)), \
+                        patch.object(adapters, "florence_eager_loader", side_effect=nullcontext):
                     with self.assertRaisesRegex(RuntimeError, "out of memory"):
                         instance.__init__(key, load_in_4bit=False)
                 self.assertIsNone(instance.model)

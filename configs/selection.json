@@ -1,0 +1,999 @@
+{
+  "version": "vispr-eval-50-v2",
+  "source_dataset": "Ibrahim1rfan/VISPR",
+  "source_split": "train2017",
+  "source_url": "https://huggingface.co/datasets/Ibrahim1rfan/VISPR/resolve/main/train2017.zip",
+  "selection_method": "Frozen explicit IDs after visual category review; prior cohort retained where suitable",
+  "candidate_seed": 421,
+  "prior_sample": "1df1d1c206ae",
+  "changed_general_images": 11,
+  "category_definition": "documents: documents/cards/tickets/receipts dominate image; images: ordinary scene, person, object or signage",
+  "review_scope": "Image type only; privacy labels retained from VISPR without new box/transcript ground truth",
+  "images": [
+    {
+      "original_id": "2017_12973862",
+      "category": "documents",
+      "archive_member": "train2017/2017_12973862.jpg",
+      "annotation_member": "train2017/2017_12973862.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a19_name_full",
+        "a1_age_approx",
+        "a29_ausweis",
+        "a30_credit_card",
+        "a33_student_id",
+        "a38_ticket",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a75_address_current_partial",
+        "a82_date_time",
+        "a8_signature",
+        "a9_face_complete"
+      ],
+      "image_sha256": "db09cfc046f6162cbd54d11b0cd9efc5a33f6f017abd25893bc6fa655eb45af9",
+      "annotation_sha256": "3cf6df4db76f769a2abeb9709d4278780f8924fff98725638835563b818d12be",
+      "review_note": "Wallet contents with identification and payment cards",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_13117625",
+      "category": "documents",
+      "archive_member": "train2017/2017_13117625.jpg",
+      "annotation_member": "train2017/2017_13117625.json",
+      "labels": [
+        "a38_ticket",
+        "a73_landmark",
+        "a75_address_current_partial"
+      ],
+      "image_sha256": "54981d542412077695bcd8786cb8b59c4712b2aa1659133c8b8147bc98fb803f",
+      "annotation_sha256": "2e574518e2849156dbcb98b8e2daaa64c64a2db75243bb17938a66f0e6aeccdf",
+      "review_note": "Transit ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_13684945",
+      "category": "documents",
+      "archive_member": "train2017/2017_13684945.jpg",
+      "annotation_member": "train2017/2017_13684945.json",
+      "labels": [
+        "a38_ticket",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "812c3baf1d6fe75a79801daf6f4f788578db67f111327cff80b7e0b61049c4e4",
+      "annotation_sha256": "50066f553b2ff1ead2df48f51618cdf036ee38e5807b7c17a0fc512cdae38fcd",
+      "review_note": "Event admission ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_13739102",
+      "category": "documents",
+      "archive_member": "train2017/2017_13739102.jpg",
+      "annotation_member": "train2017/2017_13739102.json",
+      "labels": [
+        "a38_ticket",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "eba1c3bf517b99d7d5edc042796eddbaa70e1cdac2a2e817b6cdf29afb671764",
+      "annotation_sha256": "552766093638d71083eb949513125472da7e1cba205f44f85ebc04f3a8ace07a",
+      "review_note": "Music event ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_20514465",
+      "category": "documents",
+      "archive_member": "train2017/2017_20514465.jpg",
+      "annotation_member": "train2017/2017_20514465.json",
+      "labels": [
+        "a38_ticket"
+      ],
+      "image_sha256": "4ab7df0a9c26b083b84c31c49be1a8121093f31c8a68e03e89c567a6fc55d0ad",
+      "annotation_sha256": "b285d4472dd6bf0a748e0917ed08550610cd7b5b19f5c930ee28d51874a15597",
+      "review_note": "Mailed printed material and shipping label",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_21578128",
+      "category": "documents",
+      "archive_member": "train2017/2017_21578128.jpg",
+      "annotation_member": "train2017/2017_21578128.json",
+      "labels": [
+        "a38_ticket",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "778c693b531486072dc6265bb7de991abdb5bfae3b67080075e7a0f65605c643",
+      "annotation_sha256": "16fa594b07f85f54f4bc75d4298e3e600022da9fc404f522c76b4124bef4bd29",
+      "review_note": "Event tickets",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_23492811",
+      "category": "documents",
+      "archive_member": "train2017/2017_23492811.jpg",
+      "annotation_member": "train2017/2017_23492811.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a19_name_full",
+        "a1_age_approx",
+        "a23_birth_city",
+        "a24_birth_date",
+        "a25_nationality",
+        "a31_passport",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a75_address_current_partial",
+        "a9_face_complete"
+      ],
+      "image_sha256": "349970411c821c493adc2021cd2a0387e75843aad5085b0073708f19e8f818b5",
+      "annotation_sha256": "20e9b3d42a4dd24696d8ed5fb8cb16732a032d418f4431eb337452b836af33de",
+      "review_note": "Passport identity page",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_24603986",
+      "category": "documents",
+      "archive_member": "train2017/2017_24603986.jpg",
+      "annotation_member": "train2017/2017_24603986.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a23_birth_city",
+        "a24_birth_date",
+        "a25_nationality",
+        "a29_ausweis",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a75_address_current_partial",
+        "a82_date_time",
+        "a9_face_complete"
+      ],
+      "image_sha256": "25c9cf420b31445b083efdb2c4a680a273cf09875c90444984ee2daa41e36c6c",
+      "annotation_sha256": "bc7073c38236150583bd7d7720459694df49d9e3da31825ddc7e297f5f37ae35",
+      "review_note": "Passport identity page",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_28139894",
+      "category": "documents",
+      "archive_member": "train2017/2017_28139894.jpg",
+      "annotation_member": "train2017/2017_28139894.json",
+      "labels": [
+        "a37_receipt",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "f588d08ecda4353c2fb1d80fc994fd62b28b56a6ffce07426df34d7fbd91d11d",
+      "annotation_sha256": "a5f18ff27e08ebb833baece2e93d9f188839745f9a71d699f5e88e27b22d86d9",
+      "review_note": "Printed receipt",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_36855676",
+      "category": "documents",
+      "archive_member": "train2017/2017_36855676.jpg",
+      "annotation_member": "train2017/2017_36855676.json",
+      "labels": [
+        "a19_name_full",
+        "a25_nationality",
+        "a26_handwriting",
+        "a37_receipt",
+        "a73_landmark",
+        "a82_date_time",
+        "a8_signature"
+      ],
+      "image_sha256": "70456dc2638ac4145859440e34d12f60d27ffa592a3ab15a574648ca586327fe",
+      "annotation_sha256": "caaaf3997e44d29a8a7758b45139a2137e76244f9b007734cfc8f478d2c55392",
+      "review_note": "Entry fee receipt",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_40526576",
+      "category": "documents",
+      "archive_member": "train2017/2017_40526576.jpg",
+      "annotation_member": "train2017/2017_40526576.json",
+      "labels": [
+        "a38_ticket"
+      ],
+      "image_sha256": "f254245f048c7c1fa4ab29dc3ce38db0b5d7eec51254ae26cddc5be9c8750f28",
+      "annotation_sha256": "f7c4c9fddaf5eff8aa908c920e730f2640a229c9bc2447cbeb6babc60e188052",
+      "review_note": "Identity cards",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_40830297",
+      "category": "documents",
+      "archive_member": "train2017/2017_40830297.jpg",
+      "annotation_member": "train2017/2017_40830297.json",
+      "labels": [
+        "a19_name_full",
+        "a38_ticket",
+        "a75_address_current_partial",
+        "a82_date_time"
+      ],
+      "image_sha256": "d12903867504470aaab3caf1f15ed1aff64a798573fcf7d55c5797bdfb058775",
+      "annotation_sha256": "6123a21440a47da664620c0259c84955d014efd629084b77fb48d87179f91c6e",
+      "review_note": "Boarding pass",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_41053669",
+      "category": "documents",
+      "archive_member": "train2017/2017_41053669.jpg",
+      "annotation_member": "train2017/2017_41053669.json",
+      "labels": [
+        "a17_color",
+        "a19_name_full",
+        "a25_nationality",
+        "a31_passport",
+        "a38_ticket",
+        "a75_address_current_partial",
+        "a82_date_time"
+      ],
+      "image_sha256": "8dc8ad4019919b5a953f014c3651ff08e05d7201329cbf48a573460f0be1607a",
+      "annotation_sha256": "7f6d90788ac9bc98a7c73b1558b903245d07880069e202621ad00edf65860ba8",
+      "review_note": "Passport and boarding pass",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_42225408",
+      "category": "documents",
+      "archive_member": "train2017/2017_42225408.jpg",
+      "annotation_member": "train2017/2017_42225408.json",
+      "labels": [
+        "a38_ticket",
+        "a75_address_current_partial",
+        "a82_date_time"
+      ],
+      "image_sha256": "6ec1cac1912ee4dc520ce3fbf31b6793cda297c592c8ac7a89f9205cfcbdf998",
+      "annotation_sha256": "a47d9c77ffe08b483120836a7dc3bc8ed79b9ccb5b6209c83784497acddeb1a8",
+      "review_note": "Transit receipt",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_45484290",
+      "category": "documents",
+      "archive_member": "train2017/2017_45484290.jpg",
+      "annotation_member": "train2017/2017_45484290.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a19_name_full",
+        "a1_age_approx",
+        "a26_handwriting",
+        "a33_student_id",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a75_address_current_partial",
+        "a82_date_time",
+        "a9_face_complete"
+      ],
+      "image_sha256": "21e5f1d9ac7d03929525daafb8c5c0a5b6cc4588523ff482bd13f23cd1860d88",
+      "annotation_sha256": "ea534ecb397dce6abfc492cd05a4680a3103c9f559cf59c69ff168713d06bf61",
+      "review_note": "Student identity card",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_49040189",
+      "category": "documents",
+      "archive_member": "train2017/2017_49040189.jpg",
+      "annotation_member": "train2017/2017_49040189.json",
+      "labels": [
+        "a38_ticket",
+        "a59_sports",
+        "a67_rel_competitors",
+        "a82_date_time"
+      ],
+      "image_sha256": "f9028ba5619a68fb26b4defe39e6551b3aafd1a536c8bf53e67ca2ee8843f33f",
+      "annotation_sha256": "2a604a25cbbb678fe5240ba5394de2ec9e28a3d620960de750aa8cfb397a8da1",
+      "review_note": "Printed betting tickets",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_70033097",
+      "category": "documents",
+      "archive_member": "train2017/2017_70033097.jpg",
+      "annotation_member": "train2017/2017_70033097.json",
+      "labels": [
+        "a10_face_partial",
+        "a17_color",
+        "a1_age_approx",
+        "a24_birth_date",
+        "a25_nationality",
+        "a26_handwriting",
+        "a31_passport",
+        "a3_height_approx",
+        "a46_occupation",
+        "a5_eye_color",
+        "a6_hair_color"
+      ],
+      "image_sha256": "9315b0f9d47112101ccc21aba992c082c3c0437aefc0c4865b9b22c5005fcda9",
+      "annotation_sha256": "8fa01235a98a3669a95185173dd302efb2cb30bce56ddfb29c3dc5f475538373",
+      "review_note": "Open identity document",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_70681283",
+      "category": "documents",
+      "archive_member": "train2017/2017_70681283.jpg",
+      "annotation_member": "train2017/2017_70681283.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a26_handwriting",
+        "a29_ausweis",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a8_signature",
+        "a9_face_complete"
+      ],
+      "image_sha256": "a3843836a8315b34bb86be81aa129671c299765ef1c651328848b84fa35e21a0",
+      "annotation_sha256": "24c3f1443baa7824622420bebd37c55475d14eeb92f63b7435ead5a32a139878",
+      "review_note": "Open passport",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_74882865",
+      "category": "documents",
+      "archive_member": "train2017/2017_74882865.jpg",
+      "annotation_member": "train2017/2017_74882865.json",
+      "labels": [
+        "a31_passport",
+        "a75_address_current_partial",
+        "a82_date_time",
+        "a8_signature"
+      ],
+      "image_sha256": "a273736769c0e9320262f0b9cddeacd945ca815ace07cc8f5df3ebc365b0873a",
+      "annotation_sha256": "030ec4db2ae2915cabbd9d59c714ae8cced3f7dfaed25cb7f0d46f3bce41efc5",
+      "review_note": "Visa document",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_82353317",
+      "category": "documents",
+      "archive_member": "train2017/2017_82353317.jpg",
+      "annotation_member": "train2017/2017_82353317.json",
+      "labels": [
+        "a20_name_first",
+        "a37_receipt",
+        "a73_landmark",
+        "a74_address_current_complete",
+        "a82_date_time"
+      ],
+      "image_sha256": "a9a26542ebc7c8291b7e7e287f4e696586ebbd5e478288ea336286e779860e72",
+      "annotation_sha256": "e12aacdda991ce14aa0612e27d929d9a74ef2775a7d74f1d2d3745cd61997f5d",
+      "review_note": "Itemized receipt",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_87487006",
+      "category": "documents",
+      "archive_member": "train2017/2017_87487006.jpg",
+      "annotation_member": "train2017/2017_87487006.json",
+      "labels": [
+        "a37_receipt"
+      ],
+      "image_sha256": "bbdba135915fe48e3a546df2ab8b44a0631b0cd3fe7cc1343608f617a1c52fec",
+      "annotation_sha256": "299beffbabda7e460fcfacc3d7566184df94a2ac0fe219bd8fc1ab63ce131e03",
+      "review_note": "Restaurant receipt",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_89934047",
+      "category": "documents",
+      "archive_member": "train2017/2017_89934047.jpg",
+      "annotation_member": "train2017/2017_89934047.json",
+      "labels": [
+        "a19_name_full",
+        "a38_ticket",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "2938b94bb8f40e003f903a80d88050a3a4dc4e9d47f5efadb70788ffb96c94d7",
+      "annotation_sha256": "82dc447273a63599d245f700354416fce67eead65212c989ea88f3b36b0d355b",
+      "review_note": "Sports admission ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_92775856",
+      "category": "documents",
+      "archive_member": "train2017/2017_92775856.jpg",
+      "annotation_member": "train2017/2017_92775856.json",
+      "labels": [
+        "a38_ticket",
+        "a73_landmark",
+        "a82_date_time"
+      ],
+      "image_sha256": "ef483bed85a8be5805817c4565901ea9259ed8c0a38a44bfaed1b05ebd2da602",
+      "annotation_sha256": "97993dcca124abf60bb9a129137989827970a4b57cf2f4cc8f0bbe3c852f4879",
+      "review_note": "Printed ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_94952337",
+      "category": "documents",
+      "archive_member": "train2017/2017_94952337.jpg",
+      "annotation_member": "train2017/2017_94952337.json",
+      "labels": [
+        "a17_color",
+        "a37_receipt",
+        "a82_date_time"
+      ],
+      "image_sha256": "9b93fb58558936f4da17152284ecd4b5b24e1821e4494013762ae6f552bbf5f5",
+      "annotation_sha256": "a405a0cfb5583b798e27f7c8dee3e13f9e2b7ec4499abbe86baf9cc80577c48a",
+      "review_note": "Transit ticket",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_99959804",
+      "category": "documents",
+      "archive_member": "train2017/2017_99959804.jpg",
+      "annotation_member": "train2017/2017_99959804.json",
+      "labels": [
+        "a19_name_full",
+        "a26_handwriting",
+        "a35_mail",
+        "a75_address_current_partial"
+      ],
+      "image_sha256": "15667e01f1feca9d43a531de1af398899a63ad254f7498a0a8dd7d776ea7afe1",
+      "annotation_sha256": "c183b9cc073e53a3c3de80a364e0948517df18a40b7b21dac7891da579c54054",
+      "review_note": "Handwritten correspondence",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_24408793",
+      "category": "images",
+      "archive_member": "train2017/2017_24408793.jpg",
+      "annotation_member": "train2017/2017_24408793.json",
+      "labels": [
+        "a10_face_partial",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a4_gender",
+        "a59_sports",
+        "a65_rel_social",
+        "a9_face_complete"
+      ],
+      "image_sha256": "3265247308fd6931072b1c24fbbbd30127d200437f227b0713af65bfc0c402c4",
+      "annotation_sha256": "522b41ce9ac6679c5274228b315fb99c08171b2a4d49831fda24bc10de84acb0",
+      "review_note": "People skydiving",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_26003780",
+      "category": "images",
+      "archive_member": "train2017/2017_26003780.jpg",
+      "annotation_member": "train2017/2017_26003780.json",
+      "labels": [
+        "a10_face_partial",
+        "a11_tattoo",
+        "a12_semi_nudity",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a4_gender",
+        "a57_culture",
+        "a5_eye_color",
+        "a65_rel_social",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "20bbd52b82c524a943ddb4d43c7a18f5689d643cba5e0344dc994df052d77563",
+      "annotation_sha256": "ae1d3faf6f4fe285aa7e17b2261c3bdcf50c0095f35920a02acdabcf54370caa",
+      "review_note": "Crowd at an outdoor event",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_29550264",
+      "category": "images",
+      "archive_member": "train2017/2017_29550264.jpg",
+      "annotation_member": "train2017/2017_29550264.json",
+      "labels": [
+        "a73_landmark"
+      ],
+      "image_sha256": "491578f2045315a4330f9a3062be5a98a98a94d50da7a0bd84feea16f4cacd74",
+      "annotation_sha256": "700459435aac63b4fa4981c37b9c4ca2e9a3e7df97ec8fdd0a4035a18bbe80a9",
+      "review_note": "Building and business signage",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_34839988",
+      "category": "images",
+      "archive_member": "train2017/2017_34839988.jpg",
+      "annotation_member": "train2017/2017_34839988.json",
+      "labels": [
+        "a102_vehicle_ownership",
+        "a103_license_plate_complete",
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a65_rel_social",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "af63d96b78c5e76cf2c4f5d536984a42dd2b28bf9157420ae63c38ef0463120c",
+      "annotation_sha256": "7f7189b90678cc35be1ba9dfc0ddfc117dc43e2f6457f851db035a20973f62bc",
+      "review_note": "Vehicle with visible plate",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_43966324",
+      "category": "images",
+      "archive_member": "train2017/2017_43966324.jpg",
+      "annotation_member": "train2017/2017_43966324.json",
+      "labels": [
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a48_occassion_work",
+        "a4_gender",
+        "a5_eye_color",
+        "a62_opinion_political",
+        "a68_rel_spectators",
+        "a9_face_complete"
+      ],
+      "image_sha256": "5c1ebce89d3ce2c47903b322403cfe158f95eba33f0b3c107647f9f55dc89983",
+      "annotation_sha256": "2b6361a35fdabe50788474e7efaacc59ef6fd568c3ae17bb544bdaa75324e648",
+      "review_note": "Speaker and audience in a room",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_51636874",
+      "category": "images",
+      "archive_member": "train2017/2017_51636874.jpg",
+      "annotation_member": "train2017/2017_51636874.json",
+      "labels": [
+        "a102_vehicle_ownership",
+        "a10_face_partial",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a46_occupation",
+        "a4_gender",
+        "a59_sports",
+        "a67_rel_competitors",
+        "a6_hair_color"
+      ],
+      "image_sha256": "14993af4707615f54f744bdba97d0e98a9d5e42e4ca6f4b7a765d272f176b704",
+      "annotation_sha256": "8b9f1158d1f599ed1612a82b15bef4d3cf93609bf9261c5ed42bd7d0475c44c9",
+      "review_note": "Cyclist outdoors",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_53679607",
+      "category": "images",
+      "archive_member": "train2017/2017_53679607.jpg",
+      "annotation_member": "train2017/2017_53679607.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "ca34b3bf1d503a2838665baea5dc8aa993b1b1750cf4c814d189152963bef232",
+      "annotation_sha256": "9733fab8d5e0906c625a14a2bff18e7430c7fd95c9055bb1df182306a2271b05",
+      "review_note": "Portrait photograph",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_53731315",
+      "category": "images",
+      "archive_member": "train2017/2017_53731315.jpg",
+      "annotation_member": "train2017/2017_53731315.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a68_rel_spectators",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "cf07f7f1f575369a27cc45849bb35aafd098bcdd288c16a5a21fdde378b7731a",
+      "annotation_sha256": "4e933cdc287187d245411e3c10290d6867ac5cd7ddda6bf16b13d614f675d58c",
+      "review_note": "Seated audience",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_56236852",
+      "category": "images",
+      "archive_member": "train2017/2017_56236852.jpg",
+      "annotation_member": "train2017/2017_56236852.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a18_ethnic_clothing",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a4_gender",
+        "a55_religion",
+        "a5_eye_color",
+        "a64_rel_personal",
+        "a65_rel_social",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "8aae08ad6e3da4f9c50e37face76a84da2bee1354f46570340e58ffa337e3ca4",
+      "annotation_sha256": "8fd87a596f98e93a65ea08eea78985df4023aeb3eafac87f9832d6fb363b7b07",
+      "review_note": "People at a gathering",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_63477180",
+      "category": "images",
+      "archive_member": "train2017/2017_63477180.jpg",
+      "annotation_member": "train2017/2017_63477180.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a48_occassion_work",
+        "a4_gender",
+        "a5_eye_color",
+        "a66_rel_professional",
+        "a6_hair_color",
+        "a82_date_time",
+        "a9_face_complete"
+      ],
+      "image_sha256": "45e47c569e3f321d79675066dc811ac307a7a836c19847732ed3a9639ea4536d",
+      "annotation_sha256": "ea334af8faa6bdc53ffafbe08deed3a92d826a5b11248f8c78773bf64b23c130",
+      "review_note": "Panel discussion and audience",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_64007791",
+      "category": "images",
+      "archive_member": "train2017/2017_64007791.jpg",
+      "annotation_member": "train2017/2017_64007791.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a46_occupation",
+        "a4_gender",
+        "a66_rel_professional",
+        "a6_hair_color"
+      ],
+      "image_sha256": "f45848a00c19b99cce053cfaabbd4d15132f8f46516a5ae69f843c8e2ddb60c3",
+      "annotation_sha256": "152c73386fd716ea1515ef0a34c8fc5d81f382ad8686b440ad7bc45cc153883f",
+      "review_note": "People at a street event",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_67212291",
+      "category": "images",
+      "archive_member": "train2017/2017_67212291.jpg",
+      "annotation_member": "train2017/2017_67212291.json",
+      "labels": [
+        "a17_color",
+        "a7_fingerprint"
+      ],
+      "image_sha256": "e615d7a089ea0a452ccec82dcaec98a20e2059d81c6da4bdac838f857184429b",
+      "annotation_sha256": "a9b8a31c42a949a89070715aacce17c7abd2fbdc3fa01e54ae2f31e1367047ee",
+      "review_note": "Close view of fingertips",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_70292475",
+      "category": "images",
+      "archive_member": "train2017/2017_70292475.jpg",
+      "annotation_member": "train2017/2017_70292475.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a41_injury",
+        "a46_occupation",
+        "a4_gender",
+        "a5_eye_color",
+        "a66_rel_professional",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "95381afcc8e9a797798f4c6286b7821aaf22fc0af6735e305032eedfacfc7032",
+      "annotation_sha256": "f01a18a1d342024da76fc165ff04e5e1a10a5cccc3b39633c700712f061ef74b",
+      "review_note": "Medical scene with people",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_76725153",
+      "category": "images",
+      "archive_member": "train2017/2017_76725153.jpg",
+      "annotation_member": "train2017/2017_76725153.json",
+      "labels": [
+        "a12_semi_nudity",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "05d7c31cc71cd03a17bbdd8a86b5aeae663c62154023e87e9d7727c73c32ff9b",
+      "annotation_sha256": "51d6ba9e861a7c6609992d18e15cb1110d67ddd83916c15272430dbf58a6dcd9",
+      "review_note": "Portrait photograph",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_87927608",
+      "category": "images",
+      "archive_member": "train2017/2017_87927608.jpg",
+      "annotation_member": "train2017/2017_87927608.json",
+      "labels": [
+        "a73_landmark"
+      ],
+      "image_sha256": "8cb2f4d77e6cc688173a5fffa6128aa569013880bc7096fdfac0c7fb2bd9e2bf",
+      "annotation_sha256": "09aee1ae958c301a34cd2dfcb26433bb228f153e206b149119cbf4ef8009ce82",
+      "review_note": "Storefront signage",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_82687908",
+      "category": "images",
+      "archive_member": "train2017/2017_82687908.jpg",
+      "annotation_member": "train2017/2017_82687908.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a48_occassion_work",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a82_date_time",
+        "a9_face_complete"
+      ],
+      "image_sha256": "784c391ec6df66d71aadbd3aa1c645cfcd81781578ffeb594dd5839dea47bf24",
+      "annotation_sha256": "3ef949cfe8cfa8329d5b3f0418cd9c26287d10c9986f91847863fa0ed2b38179",
+      "review_note": "Speaker and projected screen",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_40117299",
+      "category": "images",
+      "archive_member": "train2017/2017_40117299.jpg",
+      "annotation_member": "train2017/2017_40117299.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a19_name_full",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a3_height_approx",
+        "a48_occassion_work",
+        "a4_gender",
+        "a5_eye_color",
+        "a66_rel_professional",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "56202078602f9167e89113307bcb7480a7c3853b0ba1a68a0ad372d6d979ce0f",
+      "annotation_sha256": "83c121414f93a6afa1e98097668b8b7f259cdffbcbac080456a6cd1810312663",
+      "review_note": "People at conference table",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_89177754",
+      "category": "images",
+      "archive_member": "train2017/2017_89177754.jpg",
+      "annotation_member": "train2017/2017_89177754.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a2_weight_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a65_rel_social",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "6b203a56f72f477a026c752bf26c1dae620f4de537bddf34bbddc9442f787982",
+      "annotation_sha256": "ba94b9efa1d58332156427feeecceb733e792c29fd9747699d3af4726a067fcf",
+      "review_note": "Two people posing",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_68341775",
+      "category": "images",
+      "archive_member": "train2017/2017_68341775.jpg",
+      "annotation_member": "train2017/2017_68341775.json",
+      "labels": [
+        "a12_semi_nudity",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "9f114ca52816cec468d8c192181fc70df026c10b21c657cc6f71b397c624b02a",
+      "annotation_sha256": "4690bf910a53b4e2dce5afdaa6ee88289d9567c3ea88cd3dec1891af6768195f",
+      "review_note": "Portrait in low light",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_43023556",
+      "category": "images",
+      "archive_member": "train2017/2017_43023556.jpg",
+      "annotation_member": "train2017/2017_43023556.json",
+      "labels": [
+        "a103_license_plate_complete"
+      ],
+      "image_sha256": "774419b40032f828447be1e1aace5c8e153d7b3814ecf02ea5caf1e0d4f3f2a8",
+      "annotation_sha256": "a1526b4b114258dd0b991d26278701b9658e64d21b9587db9ccb372f76740f8a",
+      "review_note": "Vehicle in a street scene",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_48175081",
+      "category": "images",
+      "archive_member": "train2017/2017_48175081.jpg",
+      "annotation_member": "train2017/2017_48175081.json",
+      "labels": [
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a5_eye_color",
+        "a6_hair_color",
+        "a9_face_complete"
+      ],
+      "image_sha256": "c5593cf805714739511ebdb729dcda72bd9e37c2943718459524987c8f2ab9b4",
+      "annotation_sha256": "3a532f37d42b666f381e02d43c38de2864b29219b9c22980846ca17876a027cd",
+      "review_note": "Portrait beside window",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_63858187",
+      "category": "images",
+      "archive_member": "train2017/2017_63858187.jpg",
+      "annotation_member": "train2017/2017_63858187.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a1_age_approx",
+        "a4_gender",
+        "a59_sports",
+        "a6_hair_color"
+      ],
+      "image_sha256": "5764da4ea111f45c8e976ae549bf5a88e8e8f8e15ffe0b7a04abd430a5df2010",
+      "annotation_sha256": "7aceeee6bc38eeda440c381f02ca8a11b6a7cb754e57367b7277b2ffe5a03b91",
+      "review_note": "Sport participant outdoors",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_58317590",
+      "category": "images",
+      "archive_member": "train2017/2017_58317590.jpg",
+      "annotation_member": "train2017/2017_58317590.json",
+      "labels": [
+        "a2_weight_approx",
+        "a59_sports"
+      ],
+      "image_sha256": "d34b8e89ace5e390224ec3bec4c79be44cf999fe25e2ba8da10b82a98c1b4d8f",
+      "annotation_sha256": "63228cc1153b7b4938f3fa43446f2845080c25316b8d7f89e3d96469c66e9dde",
+      "review_note": "Sport participant in snow",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_80787872",
+      "category": "images",
+      "archive_member": "train2017/2017_80787872.jpg",
+      "annotation_member": "train2017/2017_80787872.json",
+      "labels": [
+        "a103_license_plate_complete"
+      ],
+      "image_sha256": "a087283c2386411b7284cf72e37e1786a78de347359f1b1fb28178eb1a489792",
+      "annotation_sha256": "9a686eaffdbf4075056d84f37b5359e4d5d050ef82a28cb8db4a20fd100fab51",
+      "review_note": "Vehicle with visible plate",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    },
+    {
+      "original_id": "2017_39153089",
+      "category": "images",
+      "archive_member": "train2017/2017_39153089.jpg",
+      "annotation_member": "train2017/2017_39153089.json",
+      "labels": [
+        "a10_face_partial",
+        "a16_race",
+        "a17_color",
+        "a4_gender",
+        "a68_rel_spectators",
+        "a6_hair_color"
+      ],
+      "image_sha256": "48245f00216a1b88ec00b9cc2a020102bf313986cf8ed5788834cab661a3e2d0",
+      "annotation_sha256": "1d11c7d257df6a4b9a4255a9b7c0e6facc7b96d0c0d588ab831f80f579117275",
+      "review_note": "Outdoor crowd and stage",
+      "review_method": "assistant visual inspection of rendered contact sheet plus metadata",
+      "review_date": "2026-10-20"
+    }
+  ]
+}

@@ -282,20 +282,48 @@ def run_one_model(model_key, loader, selected, taxonomy, sample_dir, protocol, p
     return run_dir, reports
 
 
-def collect_runs(sample_dir, requested_models, protocol_id):
-    """Latest completed or checkpointed run per model under one explicit protocol."""
+COMPATIBILITY_FIELDS = ('protocol_version', 'sample_fingerprint', 'prompt', 'rules_version',
+    'max_input_edge', 'max_new_tokens', 'format_retries', 'redaction_padding',
+    'audit_redacted', 'quantize_vlm_chandra')
+
+
+def settings_match(saved, current):
+    """Explicit cross-code comparison; all substantive evaluation settings must match."""
+    return all(key in saved and key in current and saved[key] == current[key] for key in COMPATIBILITY_FIELDS)
+
+
+def collect_runs(sample_dir, requested_models, protocol_id, *, compatible_settings=None, additional_sample_dirs=()):
+    """Latest matching run per model, optionally including clearly marked old code versions.
+
+    Strict protocol-ID selection remains the default. Notebook recovery can explicitly
+    include equal-setting runs from backup roots; provenance records the difference.
+    A later failure is never silently replaced by an older success.
+    """
     records, provenance = [], []
+    folders = list(dict.fromkeys(Path(p).resolve() for p in [sample_dir, *additional_sample_dirs]))
     for model_key in requested_models:
-        candidates = sorted((Path(sample_dir) / model_key).glob('*/run_config.json'), reverse=True)
+        candidates = [p for folder in folders for p in (folder / model_key).glob('*/run_config.json')]
+        candidates.sort(key=lambda p: (p.parent.name, str(p)), reverse=True)
         for config_path in candidates:
             config = json.loads(config_path.read_text(encoding='utf-8'))
             results_path = config_path.with_name('results.json')
-            if config.get('protocol_id') != protocol_id or not results_path.exists():
+            exact = config.get('protocol_id') == protocol_id
+            compatible = compatible_settings is not None and settings_match(config, compatible_settings)
+            if not (exact or compatible) or not results_path.exists():
                 continue
             results = json.loads(results_path.read_text(encoding='utf-8'))
+            # Backups retain original /content/... paths. Relocate output previews
+            # in memory without altering the archived reports.
+            for row in results:
+                for field, filename in [('redacted_path', 'redacted.png'), ('overlay_path', 'predicted_boxes.png')]:
+                    local = config_path.parent / row['image_id'] / filename
+                    if field in row and local.is_file():
+                        row[field] = str(local)
             records.extend(results)
             provenance.append({'model_key': model_key, 'run_directory': str(config_path.parent),
-                               'rows': len(results), 'protocol_id': protocol_id})
+                               'rows': len(results), 'protocol_id': config.get('protocol_id'),
+                               'protocol_match': 'exact' if exact else 'same_settings_different_code',
+                               'helper_sha256': config.get('helper_sha256', {})})
             break
         else:
             provenance.append({'model_key': model_key, 'run_directory': None, 'rows': 0, 'protocol_id': protocol_id})

@@ -33,6 +33,7 @@ class NotebookComparisonTests(unittest.TestCase):
             folder = Path(tmp)
             ns = dict(Path=Path, pd=pd, json=json, hashlib=hashlib, display=lambda *args: None,
                 sample_dir=folder, COMPARE_MODELS=MODEL_KEYS, protocol_id='test-protocol',
+                RESULTS_ROOTS=[], ALLOW_COMPATIBLE_SAVED_RUNS=False, protocol_settings={},
                 REFERENCE_PATH=None, sample={'sample_fingerprint': 'fixture', 'images': images},
                 taxonomy=taxonomy, IOU_THRESHOLD=0.5, TEXT_RULE_ATTRIBUTES=TEXT_RULE_ATTRIBUTES,
                 build_comparison=build_comparison, collect_runs=collect_runs,

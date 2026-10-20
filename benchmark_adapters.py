@@ -11,8 +11,11 @@ Use a fresh kernel after switching between the VLM and legacy Florence profiles.
 from __future__ import annotations
 
 import gc
+import ast
 import importlib
 import math
+from contextlib import contextmanager
+from pathlib import Path
 from typing import Any
 
 
@@ -141,7 +144,10 @@ def _runtime(profile: str) -> tuple[Any, Any]:
         torch = importlib.import_module("torch")
         transformers = importlib.import_module("transformers")
     except ImportError as exc:
-        raise RuntimeError(f"Install the {profile!r} dependency profile in a GPU runtime, then restart the kernel.") from exc
+        raise RuntimeError(
+            f"Cannot import the {profile!r} runtime: {type(exc).__name__}: {exc}. "
+            "Use the notebook's isolated Python 3.11 worker setup; installing with --no-deps does not repair incompatible packages."
+        ) from exc
     expected = "4.41.2" if profile == "florence" else "4.57.1"
     if transformers.__version__ != expected:
         raise RuntimeError(
@@ -270,6 +276,44 @@ class VLMAdapter(_Adapter):
                 "native_output": None, "metadata": metadata}
 
 
+def florence_eager_imports(filename, imports):
+    """Ignore only guarded optional FlashAttention in Florence's legacy scan."""
+    if Path(filename).name != 'modeling_florence2.py' or 'flash_attn' not in imports:
+        return imports
+    tree = ast.parse(Path(filename).read_text(encoding='utf-8'))
+    def flash_import(node):
+        if isinstance(node, ast.ImportFrom):
+            return (node.module or '').split('.')[0] == 'flash_attn'
+        return isinstance(node, ast.Import) and any(x.name.split('.')[0] == 'flash_attn' for x in node.names)
+    all_imports = {id(node) for node in ast.walk(tree) if flash_import(node)}
+    guarded = set()
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.If) and isinstance(node.test, ast.Call)
+                and isinstance(node.test.func, ast.Name)
+                and node.test.func.id == 'is_flash_attn_2_available'
+                and not node.test.args and not node.test.keywords):
+            guarded.update(id(child) for statement in node.body for child in ast.walk(statement) if flash_import(child))
+    if all_imports and all_imports <= guarded:
+        return [name for name in imports if name != 'flash_attn']
+    return imports
+
+
+@contextmanager
+def florence_eager_loader():
+    """Temporary import-discovery shim; weights and remote source stay intact.
+
+    Used only in the single-model worker while loading eager Florence. Other
+    missing dependencies still raise normally. Restore the scanner on failure.
+    """
+    from transformers import dynamic_module_utils
+    original = dynamic_module_utils.get_imports
+    dynamic_module_utils.get_imports = lambda filename: florence_eager_imports(filename, original(filename))
+    try:
+        yield
+    finally:
+        dynamic_module_utils.get_imports = original
+
+
 class FlorenceAdapter(_Adapter):
     def __init__(self, model_key: str = "florence2", **kwargs):
         if kwargs.get("load_in_4bit", False):
@@ -278,14 +322,15 @@ class FlorenceAdapter(_Adapter):
         super().__init__(model_key, **kwargs)
         self.dtype = self.torch.float16
         # Remote code is necessary for the exact original Microsoft checkpoint.
-        # The default revision is pinned above; no source patches or substituted
-        # community checkpoints are applied behind the user's back.
+        # The default revision is pinned above. Only the legacy dependency scan
+        # is adapted for eager attention; model source and weights stay intact.
         args = dict(self._hub_kwargs, trust_remote_code=True)
         try:
-            self.processor = self.transformers.AutoProcessor.from_pretrained(self.model_id, **args)
-            self.model = self.transformers.AutoModelForCausalLM.from_pretrained(
-                self.model_id, **args, torch_dtype=self.dtype, attn_implementation="eager", use_safetensors=True,
-            )
+            with florence_eager_loader():
+                self.processor = self.transformers.AutoProcessor.from_pretrained(self.model_id, **args)
+                self.model = self.transformers.AutoModelForCausalLM.from_pretrained(
+                    self.model_id, **args, torch_dtype=self.dtype, attn_implementation="eager", use_safetensors=True,
+                )
             self.model.to("cuda").eval()
         except Exception:
             self.close()
@@ -311,6 +356,7 @@ class FlorenceAdapter(_Adapter):
         regions = florence_regions(native, model_input.size, image.size, task)
         metadata = self._metadata(image, model_input, outputs[0].tolist()[1:], limit)
         metadata.update({"task": task, "num_beams": 3, "native_coordinate_size": list(model_input.size),
+                         "attention_implementation": "eager", "loader_compatibility": "guarded_optional_flash_import",
                          "regions_coordinate_size": list(image.size), "native_json_required": False})
         result = {"raw_text": raw, "output_kind": "ocr_regions", "native_output": native,
                   "text_regions": regions, "metadata": metadata}
