@@ -64,6 +64,7 @@ if {require_gpu!r}:
     assert torch.cuda.is_available(), 'Select a GPU runtime before running this profile'
 if {profile!r} == 'dots':
     import flash_attn
+    from transformers import Qwen2VLVideoProcessor, Qwen2_5_VLProcessor
     if {require_gpu!r}:
         assert torch.cuda.get_device_capability()[0] >= 8, 'dots.ocr requires an Ampere-or-newer GPU (L4/A100)'
 if {profile!r} == 'chandra':

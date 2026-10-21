@@ -304,14 +304,16 @@ def build_comparison(records: Iterable[Mapping[str, Any]], attribute_ids: Iterab
     """Return JSON-safe tables: summaries, per_image, per_attribute, coverage.
 
     Required record fields: image_id, model_key, stratum (document/general),
-    status (ok/error), ground_truth_attributes and, on success,
+    status (ok/partial/error), ground_truth_attributes and, on success,
     predicted_attributes. Optional fields: detections, ground_truth_boxes,
     boxes_complete (or box_ground_truth_complete), predicted_text, reference_text.
 
     ``all_successful`` evaluates each model's successful outputs. Pairwise
     ranking should use ``common_successful``: the same images successfully
     processed by EVERY requested model, including models with no records.
-    Failures have no quality score and remain visible in coverage. A missing
+    Partial outputs and errors have no quality score and remain visible in coverage.
+    Partial detections remain available for inspection, never counted as successful.
+    A missing
     model therefore gives an empty common subset, never a vacuous comparison.
     Supply the planned sample_image_ids to count entirely unattempted images.
     Optional sample_strata maps planned IDs to document/general, allowing
@@ -362,8 +364,8 @@ def build_comparison(records: Iterable[Mapping[str, Any]], attribute_ids: Iterab
         if image_id in known_strata and known_strata[image_id] != record["stratum"]:
             raise ValueError(f"Inconsistent planned stratum for {image_id}")
         known_strata[image_id] = record["stratum"]
-        if record.get("status") not in {"ok", "error"}:
-            raise ValueError("status must be ok or error")
+        if record.get("status") not in {"ok", "partial", "error"}:
+            raise ValueError("status must be ok, partial or error")
         truth = _labels(record["ground_truth_attributes"], allowed, "ground_truth_attributes")
         metadata = (record["stratum"], frozenset(truth))
         if image_id in image_metadata and image_metadata[image_id] != metadata:
@@ -371,10 +373,13 @@ def build_comparison(records: Iterable[Mapping[str, Any]], attribute_ids: Iterab
         image_metadata[image_id] = metadata
         row = {"image_id": image_id, "model_key": model, "stratum": record["stratum"],
                "status": record["status"], "ground_truth_attributes": sorted(truth)}
-        if record["status"] == "error":
+        if record["status"] != "ok":
             row.update({"error": record.get("error"), "precision": None, "recall": None, "f1": None,
                         "predicted_attributes": None, "missed_attributes": None, "unannotated_attributes": None,
                         "localization_available": False, "text_available": False})
+            if record["status"] == "partial":
+                row["predicted_attributes"] = sorted(_labels(
+                    record.get("predicted_attributes") or [], allowed, "predicted_attributes"))
         else:
             row.update(label_metrics(truth, record["predicted_attributes"], labels))
             for field in ("detections", "ground_truth_boxes"):
@@ -403,6 +408,8 @@ def build_comparison(records: Iterable[Mapping[str, Any]], attribute_ids: Iterab
                 "model_key": model, "stratum": stratum, "expected_images": len(expected),
                 "attempted_images": len(attempted), "successful_images": len(successful),
                 "failed_images": len(attempted) - len(successful), "not_attempted_images": len(expected) - len(attempted),
+                "partial_images": sum(row["status"] == "partial" for row in attempted),
+                "error_images": sum(row["status"] == "error" for row in attempted),
                 "success_rate_of_attempts": _divide(len(successful), len(attempted), None),
                 "coverage_of_sample": _divide(len(successful), len(expected), None),
             })
@@ -431,7 +438,8 @@ def build_comparison(records: Iterable[Mapping[str, Any]], attribute_ids: Iterab
             "Missing labels are measured omissions, not evidence that a model consciously decided they are not private.",
             "a0_safe is excluded. Labels are deduplicated per image. Undefined nonempty-sample label precision/recall/F1 use 0.",
             "macro_f1_supported averages only labels with ground-truth support; macro_f1_all_labels includes every configured privacy label, assigning 0 to unsupported labels.",
-            "Errors and unattempted images are not converted to empty predictions. No-success quality scores are null. Read coverage alongside quality.",
+            "Partial outputs, errors and unattempted images are excluded from quality scores, not converted to empty predictions. No-success quality scores are null. Read coverage alongside quality.",
+            "failed_images counts all non-ok attempts (partial_images plus error_images). Partial labels are retained for inspection only.",
             "common_successful contains only images successful for every requested model; missing requested models make it empty.",
             "IoU requires complete independent manual boxes in original-image xyxy pixels; matches are same-label, one-to-one maximum cardinality at the threshold.",
             "ROUGE-L/CER/WER need independent reference transcriptions. ROUGE-L uses whitespace-token sequence LCS; Unicode NFKC and collapsed whitespace, case and punctuation retained.",

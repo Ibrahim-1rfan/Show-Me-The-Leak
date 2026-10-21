@@ -1,0 +1,18 @@
+{
+  "scope": "Pre-cleanup working-tree metadata snapshot excluding .git; includes temporary environments since deleted. Not current disk usage or complete content hashing.",
+  "files": 55393,
+  "directories": 5096,
+  "classifications": {
+    "keep_compatibility_or_investigate": 135,
+    "investigate_before_moving_expensive_or_source_data": 20001,
+    "keep_private_current_evidence": 2723,
+    "keep_active_or_historical_source": 112,
+    "temporary_review_before_deletion": 31413,
+    "archive_in_place_preserve_references": 1009
+  },
+  "subsequent_cleanup": {
+    "files_deleted": 25184,
+    "bytes_deleted": 294389475,
+    "record": "docs/audit/cleanup_candidates.json"
+  }
+}

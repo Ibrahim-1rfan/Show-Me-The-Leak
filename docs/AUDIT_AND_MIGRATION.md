@@ -1,3 +1,80 @@
+# Current cleanup and GitHub handoff — 21 October 2026
+
+Current usage: [GUIDE](../GUIDE.md). Current measured results:
+[BENCHMARK_REPORT](../BENCHMARK_REPORT.md). Development history: [TRACKER](../TRACKER.md).
+The October 20 migration notes below are preserved as historical evidence.
+
+## Inventory and decisions
+
+The recursive metadata inventory is `docs/handoff_20261021/inventory_final.json`
+(private/local); its [public summary](audit/handoff_inventory_summary.json) records
+counts and scope. Run-source and image artifact hashes are verified by the benchmark
+audit; an inventory listing does not imply every byte of the source dataset was hashed.
+
+| Classification | Exact path or path family | Decision / dependency |
+|---|---|---|
+| Keep | `src/`, `configs/`, `notebooks/`, `tests/`, `scripts/`, four root handoff documents | Maintained pipeline, pinned selection, clean entry points and reproduction |
+| Keep | `docs/audit/latest_benchmark.json`, `docs/TRAINING_READINESS.md` | Public aggregate evidence and planning-only training |
+| Keep privately | `vlm_*/`, `ocr_*/`, `20261021T*Z/`, `data/vispr_eval_50/` | Current downloaded evidence and frozen data; intentionally ignored |
+| Archive in place | `results/`, `results_ocr/`, `Leak_Benchmark_Results/`, `outputs/`, `output/` | Regression/proposal evidence; old tools and documentation still reference these paths |
+| Keep compatibility | `Model_Testing.ipynb`, root `benchmark_*.py`, `taxonomy_crosswalk.csv`, root manifests and reconciliation utilities | Legacy tests import the notebook/helpers; not safe to relocate blindly |
+| Keep privately | `docs/handoff_20261021/notebooks_received/` | Exact received notebooks/reviews/outputs before cleaning |
+| Investigate | `train2017/`, `train2017.zip`, model caches, `tmp/category_review/`, `tmp/regression_sources/`, `tmp/dots_processor_probe/`, `tmp/proposal_render/` | Expensive source or potentially useful diagnostic/visual evidence; not deletion candidates |
+
+No complete run is a duplicate merely because it reuses prediction files: run IDs,
+reviews, logs and execution accounting differ. Preserve every such run.
+
+## Completed source cleanup
+
+- Replaced 20,000 redundant per-dataset-file ignore entries with the existing broad
+  directory rule; retained other exclusions and added private imports/checkpoints.
+- Preserved received executed notebooks, then rebuilt active notebooks with empty
+  outputs/reviews and single mode. Legacy notebook outputs were preserved separately
+  and cleared from its source copy; its code remains for compatibility tests.
+- Removed `output/` and `outputs/` from the Git index only. All local files remain.
+  Two previously absent tracked archives, `results.zip` and `results_ocr.zip`, were
+  also untracked; their absence predates this task. No filesystem deletion occurred.
+- Historical Git objects are unchanged. A later commit records the source cleanup;
+  this task does not commit, push or rewrite history. A clone of the old remote
+  revision will still have its old contents until the handoff changes are published.
+- Local ignored upload scripts contain literal tokens and are excluded from the
+  source allowlist. Their values are not copied into documentation or packages.
+  This audit's pattern scan covers the source handoff, not credential revocation
+  or every historical Git object. Do not publish those local scripts.
+
+## Authorized deletion completed
+
+On 21 October 2026 the user authorized removal of old unimportant files.
+The [exact deletion record](audit/cleanup_candidates.json) records 25,184 files
+and 294,389,475 bytes removed: Python caches, synthetic scratch files, temporary
+widget/development environments, the disposable source verification copy and two
+duplicate installation logs. Targets were resolved inside the workspace and
+checked for reparse points before deletion. Original test/install logs were
+preserved under `docs/handoff_20261021/`; duplicate log hashes matched.
+
+The earlier inventory is a **pre-cleanup snapshot**, not current disk usage.
+Datasets, benchmark results, proposal files, executed notebook backups, diagnostic
+experiments and legacy source were retained in place. There is no remaining
+approval requirement for the deletion already completed. Further removals need
+a new dependency/evidence review. Install `requirements-dev.txt` in a new local
+environment to run the full development suite again; temporary environments
+are not part of the GitHub project.
+
+## Backups and final structure
+
+Received notebooks and earlier documentation were copied locally before editing.
+The seven imported runs are hash-inventoried; tracker appendices preserve their
+original versions separately. Saved Colab logs verify mounted-Drive copies as
+reported in BENCHMARK_REPORT. No new live remote durability check is claimed.
+
+The source structure in README is the final maintained structure. Generated data,
+outputs and private evidence remain local at their original paths so links continue
+to work. Further physical decluttering can move a reviewed group into ignored
+`archive/` after dependencies and backup integrity are rechecked. Training artifacts
+will use the separate Drive training destination; no training has started.
+
+---
+
 # Audit and phased migration
 
 Audit date: 20 October 2026. The existing files are preserved in place. No branch,

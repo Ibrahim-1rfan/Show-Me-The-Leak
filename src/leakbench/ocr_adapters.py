@@ -286,7 +286,7 @@ def _require_version(package: str, expected: str):
 
 class _GPUOCRAdapter:
     def _configure(self, model_id, max_new_tokens, max_input_edge, load_in_4bit):
-        if max_new_tokens < 1 or max_input_edge < 28:
+        if max_new_tokens < 1 or (max_input_edge is not None and max_input_edge < 28):
             raise ValueError("max_new_tokens must be positive and max_input_edge must be >=28")
         self.model_id = model_id
         self.max_new_tokens = max_new_tokens
@@ -299,7 +299,7 @@ class _GPUOCRAdapter:
         from PIL import Image, ImageOps
         image = ImageOps.exif_transpose(image).convert("RGB")
         original_size = image.size
-        image.thumbnail((self.max_input_edge, self.max_input_edge), Image.Resampling.LANCZOS)
+        if self.max_input_edge is not None:image.thumbnail((self.max_input_edge, self.max_input_edge), Image.Resampling.LANCZOS)
         return image, original_size
 
     def _generate(self, image, prompt):
@@ -372,7 +372,8 @@ class ChandraAdapter(_GPUOCRAdapter):
         from chandra.prompts import PROMPT_MAPPING
         if not torch.cuda.is_available():
             raise RuntimeError("Chandra benchmark inference requires a CUDA GPU runtime")
-        dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
+        from .hardware import native_dtype
+        dtype = native_dtype(torch)
         load_kwargs = {"device_map": "auto", "dtype": dtype, "attn_implementation": "sdpa"}
         if load_in_4bit:
             load_kwargs["quantization_config"] = BitsAndBytesConfig(
@@ -422,7 +423,7 @@ def load_dots_processor(model_path):
     still-image task. Never change the checkpoint's custom <|imgpad|> token.
     """
     from transformers import (AutoTokenizer, Qwen2VLImageProcessor,
-                              Qwen2_5_VLProcessor, Qwen2_5_VLVideoProcessor)
+                              Qwen2_5_VLProcessor, Qwen2VLVideoProcessor)
     model_path = Path(model_path)
     template = json.loads((model_path / 'chat_template.json').read_text(encoding='utf-8'))['chat_template']
     if not isinstance(template, str) or '<|imgpad|>' not in template:
@@ -431,7 +432,7 @@ def load_dots_processor(model_path):
     image_processor = Qwen2VLImageProcessor.from_pretrained(str(model_path))
     processor = Qwen2_5_VLProcessor(
         image_processor=image_processor, tokenizer=tokenizer,
-        video_processor=Qwen2_5_VLVideoProcessor(), chat_template=template)
+        video_processor=Qwen2VLVideoProcessor(), chat_template=template)
     processor.image_token = '<|imgpad|>'
     processor.image_token_id = tokenizer.convert_tokens_to_ids(processor.image_token)
     if processor.image_token_id != 151665:
@@ -465,7 +466,7 @@ class DotsOCRAdapter(_GPUOCRAdapter):
         self._configure(model_id, max_new_tokens, max_input_edge, load_in_4bit)
         _require_version("transformers", "4.56.1")
         import torch
-        from huggingface_hub import HfApi, snapshot_download
+        from .downloads import snapshot_with_retry
         from transformers import AutoModelForCausalLM
         if (not torch.cuda.is_available() or torch.cuda.get_device_capability()[0] < 8
                 or not torch.cuda.is_bf16_supported()):
@@ -477,8 +478,10 @@ class DotsOCRAdapter(_GPUOCRAdapter):
         local_dir = Path(local_model_dir)
         if "." in local_dir.name:
             raise ValueError("dots.ocr custom code needs a model directory name without periods, such as DotsOCR")
-        self.revision = HfApi().model_info(model_id, revision=revision).sha
-        model_path = snapshot_download(repo_id=model_id, revision=self.revision, local_dir=str(local_dir))
+        if not revision:raise ValueError('A pinned dots revision is required')
+        self.revision = revision
+        model_path = snapshot_with_retry(repo_id=model_id, revision=self.revision, local_dir=str(local_dir),local_files_only=True,
+            allow_patterns=['*.safetensors','*.json','*.py','*.txt','*.model','*.jinja'])
         try:
             self.processor = load_dots_processor(model_path)
             check_dots_image_processor(self.processor)

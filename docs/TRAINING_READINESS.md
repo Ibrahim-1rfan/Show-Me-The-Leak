@@ -1,31 +1,31 @@
 # Training readiness plan
 
-No model training is launched by these notebooks. A final best VLM or OCR model
-cannot be selected until the repaired benchmark has measured results on the new
-cohort. Candidate decisions must compare both coverage and same-image quality.
+Planning only; `configs/training_plan.json` remains `enabled: false` and the third
+notebook never launches training. Current decision evidence is in
+[the benchmark report](../BENCHMARK_REPORT.md); this document defines the proposed
+experiment, not a validated training implementation.
 
-## Candidates and support checks
+## Candidate and approval gates
 
-Model cards and repository metadata checked 20 October 2026; exact revisions and
-declared licenses are in `configs/models.json`. This is a technical readiness
-assessment, not a statement that training has been validated on the user's GPU.
+Recommended first candidate (training not yet enabled): **Qwen/Qwen3-VL-8B-Instruct**.
+It produced localized pilot detections and successful bounded ID correction. The
+audited full export has 48/50 valid predictions and the strongest F1 on the
+34-image common valid subset. See BENCHMARK_REPORT for scores and failure coverage.
+Qwen2.5's empty pilot and higher full failure rate do not make it a better first candidate. OCR plus rules has very low recall;
+first separate recognition failures from text-rule coverage. Florence repetition
+and Llama authorization remain blockers, so neither enters the initial training plan.
+No model is approved until baseline review, suitable annotations, disjoint splits,
+license review and a real forward/backward smoke test pass.
 
-| Candidate | Why retain it | Training readiness |
-|---|---|---|
-| Qwen3 VL 8B | Primary VLM candidate; the old paired sample favored it over Qwen2.5, with low recall overall | Transformer VLM; evaluate supervised LoRA/QLoRA on an isolated training environment. Apache 2.0 model card. Validate target modules and gradients before a full run. |
-| Qwen2.5 VL 7B | VLM alternative if resource use or output reliability is better | Apache 2.0; same requirements for image-aware batching and adapter compatibility. |
-| Llama 3.2 Vision 11B | Alternative architecture | Custom Llama 3.2 terms and gated access. Fix output compliance first. Larger inference memory does not establish training feasibility. |
-| Florence 2 large ft | Smaller OCR/region candidate | MIT model card; encoder-decoder vision architecture. Native task tokens, region sequence targets and compatible remote code are required. Its inference adapter is not a trainer. |
-| Chandra 9B | OCR candidate once truncation and field mapping are understood | Original checkpoint declares OpenRAIL; inspect the full license and usage constraints before adaptation/distribution. Vision-language training data and original tokenizer/template must match. |
-| dots.ocr 3B | OCR/layout candidate | Card declares MIT and repository also includes license/notice files; review these at the pinned revision. Custom vision code and FlashAttention need a successful forward/backward compatibility pilot. |
-
-Sources: [Qwen3](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct),
-[Qwen2.5](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct),
-[Llama](https://huggingface.co/meta-llama/Llama-3.2-11B-Vision-Instruct),
-[Florence](https://huggingface.co/microsoft/Florence-2-large-ft),
-[Chandra](https://huggingface.co/datalab-to/chandra),
-[dots](https://huggingface.co/dots-studio/dots.ocr),
-[PEFT quantized training guidance](https://huggingface.co/docs/peft/main/en/developer_guides/quantization).
+The [Qwen card](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct) declares Apache 2.0
+(checked 2026-10-21). Preserve pinned checkpoint/license notices and review dataset
+rights separately. Proposed method: supervised LoRA or QLoRA for explicit PII label
+and bounding-box output, with exact JSON/schema and image-token alignment. The
+[PEFT quantization guide](https://huggingface.co/docs/peft/developer_guides/quantization)
+supports adapter training on quantized bases in compatible architectures; it does
+not prove this project's Qwen3 collator or target modules work. Training dependencies
+(PEFT, a compatible trainer and image-aware batching) are intentionally not added
+to the benchmark environments until that integration is tested.
 
 ## Data requirements and leakage controls
 
@@ -48,7 +48,7 @@ from OCR recognition so effects can be attributed correctly.
 1. Freeze baseline configurations, dataset version, checkpoint and measured
    metrics. Compare missed categories, label micro F1 and recall, supported macro
    F1, output coverage, document/general slices, runtime and GPU memory.
-2. Select one candidate per category. First compare prompt/mapping changes on
+2. Select one primary candidate after reviewing the full evidence. First compare prompt/mapping changes on
    development data. Train only if the remaining errors justify it.
 3. Start with a small gradient/serialization smoke test, microbatch 1 and gradient
    accumulation. Choose BF16 only if supported. Consider 4-bit base weights plus
@@ -70,3 +70,32 @@ Training may proceed only after benchmark review, candidate selection, license
 review, suitable supervised annotations, disjoint splits and the GPU smoke test.
 Store checkpoints under `Leak_Benchmark_Results/training/<experiment_id>/`, separate
 from baseline results. Training artifacts and raw private examples stay out of Git.
+
+## Resource and experiment plan (not measured training requirements)
+
+Use a separate environment and experiment ID. Start with microbatch 1, gradient
+accumulation and activation checkpointing. Provisional adapter rank 16, alpha 32
+and learning rate 1e-4 are hypotheses in the config, not tuned values; inspect actual
+module names rather than assuming all-linear injection is suitable for vision blocks.
+Freeze the vision encoder initially as an experimental choice, then verify gradients
+reach intended adapters. Do not mask image tokens as if they were answer tokens.
+
+The saved inference memory footprint cannot predict training memory. Prefer an
+available A100 for the first controlled smoke test; an L4 attempt is conditional on
+measured peak allocation and a conservative image/token budget. No minimum VRAM,
+training duration or throughput has been established. Record free disk before
+downloading the base checkpoint; budget its actual downloaded size, data, optimizer
+state and at least two adapter checkpoints before continuing. Stop on insufficient
+space rather than deleting historical evidence.
+
+Save seed, split hashes, annotation revision, package lock, base checkpoint revision,
+LoRA config, loss curves, elapsed time and peak memory per experiment. Save adapter,
+optimizer/scheduler and RNG state for resume, plus an explicit best-checkpoint
+selection criterion based on validation. Verify checkpoint reload before a long run.
+Back up under the existing Drive training destination with manifest/hash readback.
+
+Evaluate baseline and adapter on the same frozen 50-image regression cohort and a
+new untouched test set; report coverage/failures, paired label metrics, per-category
+misses, localization and retained readable PII where independent references support
+those claims. Use validation only for tuning. A gain on this repeatedly reviewed
+50-image cohort alone is insufficient evidence of improvement.

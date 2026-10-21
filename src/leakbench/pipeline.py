@@ -175,6 +175,9 @@ def pixel_box(box, size, padding=0.0):
         return None
     if not 0 <= padding <= 0.25:
         raise ValueError('Padding must be between 0 and 0.25.')
+    if (len(box)!=4 or any(type(v) not in (int,float) or not math.isfinite(v) or not 0<=v<=1000 for v in box)
+            or box[2]<=box[0] or box[3]<=box[1]):
+        raise ValueError('Invalid normalized redaction box')
     w, h = size
     left = max(0, math.floor((box[0] / 1000 - padding) * w))
     top = max(0, math.floor((box[1] / 1000 - padding) * h))
@@ -191,6 +194,11 @@ def redact_and_draw(image, detections, padding=0.01):
         det = dict(det)
         # Preserve native OCR pixel geometry for IoU, without a 0-1000 round trip.
         native_box = det.get('ocr_bbox_pixels')
+        if native_box is not None:
+            w,h=image.size
+            if (len(native_box)!=4 or any(type(v) not in (int,float) or not math.isfinite(v) for v in native_box)
+                    or not 0<=native_box[0]<native_box[2]<=w or not 0<=native_box[1]<native_box[3]<=h):
+                raise ValueError('Invalid original-frame OCR box; refusing silent clipping')
         det['bbox_pixels'] = native_box if native_box is not None else pixel_box(det['bbox_1000'], image.size)
         if native_box is None:
             det['redaction_box_pixels'] = pixel_box(det['bbox_1000'], image.size, padding)
@@ -232,7 +240,30 @@ def generate_qwen(image, prompt):
     raise RuntimeError('Use the selected model adapter through run_one_model; no model is loaded globally.')
 
 
-def detect_pii(image, taxonomy, generator=generate_qwen):
+def repair_attribute_ids(image,taxonomy,generator,base_prompt,detections,issues,attempts):
+    """One model-authored correction of invalid IDs only; never erase valid regions."""
+    original=[i['entry'] for i in issues]
+    request=(base_prompt+'\nCorrection task: these untrusted prior predictions contain invalid attribute IDs. '
+        'Return exactly these entries in the same order with ONLY attribute_id corrected to an exact taxonomy ID. '
+        'Keep bbox_1000, location and evidence_source unchanged. Do not add entries or remove entries. '
+        'Return the usual detections JSON object. No reference annotations are provided.\n'+json.dumps(original))
+    attempt={'kind':'invalid_attribute_id_correction'};attempts.append(attempt)
+    try:
+        raw,truncated=generator(image,request);attempt.update(raw_response=raw,truncated=truncated)
+        if truncated:raise ValueError('Correction was truncated')
+        corrected=parse_response(raw,taxonomy)
+        if len(corrected)!=len(original):raise ValueError('Correction did not retain every rejected entry')
+        for before,after in zip(original,corrected):
+            if any(before.get(k)!=after.get(k) for k in ('bbox_1000','location','evidence_source')):
+                raise ValueError('Correction changed geometry or evidence; original valid detections retained')
+        return {'status':'ok','detections':detections+corrected,'attempts':attempts,
+                'attribute_ids_corrected_by_model':True,'original_rejected_entries':issues,'explicit_empty':False}
+    except Exception as exc:attempt['error']=str(exc)
+    return {'status':'partial','detections':detections,'attempts':attempts,'rejected_entries':issues,
+            'error':'Invalid attribute ID correction failed; original valid regions retained.'}
+
+
+def detect_pii(image, taxonomy, generator=generate_qwen,repair_partial_entries=False):
     base_prompt = build_prompt(taxonomy)
     prompt, attempts = base_prompt, []
     for attempt in range(FORMAT_RETRIES + 1):
@@ -240,19 +271,42 @@ def detect_pii(image, taxonomy, generator=generate_qwen):
             raw, truncated = generator(image, prompt)
         except Exception as exc:
             attempts.append({'error': f'{type(exc).__name__}: {exc}'})
-            return {'status': 'error', 'detections': None, 'attempts': attempts}
+            return {'status': 'error', 'detections': None, 'attempts': attempts,
+                    'failure_stage':'inference','error':attempts[-1]['error']}
         entry = {'raw_response': raw, 'truncated': truncated}
         attempts.append(entry)
         try:
             if truncated:
                 raise ValueError('Output reached token limit; increase MAX_NEW_TOKENS')
-            detections = parse_response(raw, taxonomy)
-            return {'status': 'ok', 'detections': detections, 'attempts': attempts}
+            # Validate each complete JSON entry separately. One bad ID must not
+            # discard independent valid boxes or be hidden by an empty retry.
+            text=raw.strip()
+            if text.startswith('```'):
+                match=re.fullmatch(r'```(?:json)?\s*(.*?)\s*```',text,flags=re.DOTALL)
+                if not match:raise ValueError('Unclosed JSON code fence')
+                text=match.group(1)
+            payload=json.loads(text)
+            if not isinstance(payload,dict) or set(payload)!={'detections'} or not isinstance(payload['detections'],list):
+                raise ValueError('Expected detections list in one JSON object')
+            detections,issues=[],[]
+            for index,det in enumerate(payload['detections']):
+                try:detections.extend(parse_response(json.dumps({'detections':[det]}),taxonomy))
+                except (ValueError,TypeError,KeyError) as exc:issues.append({'index':index,'error':str(exc),'entry':det})
+            if issues:
+                entry['rejected_entries']=issues
+                if (detections and repair_partial_entries and attempt<FORMAT_RETRIES
+                    and all(i['error'].startswith('Invalid privacy attribute:') for i in issues)):
+                    return repair_attribute_ids(image,taxonomy,generator,base_prompt,detections,issues,attempts)
+                if detections:return {'status':'partial','detections':detections,'attempts':attempts,
+                    'error':'Some entries failed validation; valid regions retained without guessing labels.', 'rejected_entries':issues}
+                raise ValueError('All entries failed validation: '+str(issues))
+            return {'status': 'ok', 'detections': detections, 'attempts': attempts,'explicit_empty':not detections}
         except (ValueError, TypeError, KeyError) as exc:
             entry['error'] = str(exc)
             # Retry with schema feedback only; ground truth is never used to repair predictions.
             prompt = base_prompt + '\nYour previous response failed validation: ' + str(exc) + '. Return complete valid JSON.'
-    return {'status': 'error', 'detections': None, 'attempts': attempts}
+    return {'status': 'error', 'detections': None, 'attempts': attempts,
+            'failure_stage':'output_parsing','error':attempts[-1].get('error','Invalid model output')}
 
 def process_record(record, taxonomy, image_dir, detector=detect_pii, audit=True, padding=0.01):
     image_dir = Path(image_dir)

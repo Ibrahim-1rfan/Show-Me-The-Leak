@@ -1,6 +1,11 @@
+> Current handoff verification is recorded in [TRACKER Section L](../TRACKER.md) and [GUIDE](../GUIDE.md). This file retains the older validation history.
+
 # Validation and handoff
 
-Prepared 20 October 2026 for the user's own Colab GPU runs.
+Historical handoff prepared 20 October 2026. **Superseded for runtime acceptance**
+by `REGRESSION_REPORT_20261021.md` and the live `TRACKER.md`: the imported pilots
+exposed failures these earlier offline checks did not catch. The 98-test result
+below describes the previous release, not proof of successful model redaction.
 
 ## Completed locally
 
@@ -30,11 +35,10 @@ Prepared 20 October 2026 for the user's own Colab GPU runs.
    For dots, select L4/A100 or another supported Ampere-or-newer GPU.
 2. Optionally upload `vispr_eval_50.zip` into `/content` to avoid downloading the
    full source ZIP. The notebook still validates the frozen selection and hashes.
-3. Run from the top, mount the existing Drive destination, and allow the two-image
-   pilots to finish. Add the `HF_TOKEN` Colab secret for authorized Llama access.
-4. Review pilot timings, GPU placement, native outputs, prediction overlays and
-   redactions. If suitable, set `RUN_FULL_BENCHMARK=True` and rerun sections 5
-   onward. The same protocol resumes and reuses valid pilot images.
+3. Run from the top with `RUN_STAGE='single'`. Add the `HF_TOKEN` Colab secret
+   for authorized Llama access. Failed models remain quarantined.
+4. Review single-image output, then use `RUN_STAGE='pilot'`. Inspect all four
+   pilot outputs and record image-specific review notes before `RUN_STAGE='full'`.
 5. Review coverage alongside quality, and verify the Drive backup. The last cell
    can retry copying without repeating inference.
 

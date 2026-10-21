@@ -1,3 +1,5 @@
+> Historical snapshot. Current results: [BENCHMARK_REPORT](BENCHMARK_REPORT.md); current usage: [GUIDE](GUIDE.md). Later runs supersede model/coverage statements below.
+
 # Running the six-model PII benchmark
 
 ## October 10 loader fixes

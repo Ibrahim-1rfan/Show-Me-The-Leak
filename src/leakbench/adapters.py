@@ -59,6 +59,7 @@ MODEL_SPECS = {
 def prepare_image(image: Any, max_input_edge: int = 1280) -> Any:
     """Cap longest edge without upscaling; preserve the caller's upright frame."""
     from PIL import Image
+    if max_input_edge is None:return image.convert('RGB')
     if isinstance(max_input_edge, bool) or not isinstance(max_input_edge, int) or max_input_edge < 1:
         raise ValueError("max_input_edge must be a positive integer")
     converted = image.convert("RGB")
@@ -108,6 +109,8 @@ def florence_regions(native_output: dict, input_size: tuple, original_size: tupl
             left, top, right, bottom = box
         if right <= left or bottom <= top:
             raise ValueError("Florence region has zero or negative area")
+        if not 0<=left<right<=iw or not 0<=top<bottom<=ih:
+            raise ValueError('Florence region is outside its model-input coordinate frame')
         pixel_box = [max(0.0, min(ow, left * sx)), max(0.0, min(oh, top * sy)),
                      max(0.0, min(ow, right * sx)), max(0.0, min(oh, bottom * sy))]
         if pixel_box[2] <= pixel_box[0] or pixel_box[3] <= pixel_box[1]:
@@ -169,7 +172,7 @@ class _Adapter:
         self.model_id = self.spec["model_id"]
         if isinstance(max_new_tokens, bool) or not isinstance(max_new_tokens, int) or max_new_tokens < 1:
             raise ValueError("max_new_tokens must be a positive integer")
-        if isinstance(max_input_edge, bool) or not isinstance(max_input_edge, int) or max_input_edge < 1:
+        if max_input_edge is not None and (isinstance(max_input_edge, bool) or not isinstance(max_input_edge, int) or max_input_edge < 1):
             raise ValueError("max_input_edge must be a positive integer")
         self.max_new_tokens = max_new_tokens
         self.max_input_edge = max_input_edge
@@ -178,7 +181,8 @@ class _Adapter:
         self.model = None
         self.processor = None
         self.torch, self.transformers = _runtime(self.spec["profile"])
-        self.dtype = self.torch.bfloat16 if self.torch.cuda.is_bf16_supported() else self.torch.float16
+        from .hardware import native_dtype
+        self.dtype = native_dtype(self.torch)
         self._hub_kwargs = {"revision": self.revision}
         if token is not None:
             self._hub_kwargs["token"] = token
@@ -204,6 +208,9 @@ class _Adapter:
             "original_size": list(original.size), "input_size": list(model_input.size),
             "max_input_edge": self.max_input_edge,
             "processor_resizing": "Model-specific processor may resize/tile the capped input further.",
+            "coordinate_frame":"upright_original",
+            "input_to_original_scale":[original.width/model_input.width,original.height/model_input.height],
+            "pre_resize_policy":"processor_native" if self.max_input_edge is None else "aspect_ratio_cap_no_upscale",
             "do_sample": False, "max_new_tokens": limit,
             "output_kind": self.spec["output_kind"], "role": self.spec["role"],
         }
@@ -272,6 +279,9 @@ class VLMAdapter(_Adapter):
         response = outputs[:, prompt_tokens:]
         raw = self.processor.batch_decode(response, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
         metadata = self._metadata(image, model_input, response[0].tolist(), self.max_new_tokens)
+        metadata['vision_input_diagnostics']={k:list(v.shape) for k,v in inputs.items()
+            if k in ('pixel_values','image_grid_thw','aspect_ratio_ids','aspect_ratio_mask') and hasattr(v,'shape')}
+        if 'image_grid_thw' in inputs:metadata['image_grid_thw']=inputs['image_grid_thw'].detach().cpu().tolist()
         return {"raw_text": raw, "output_kind": "pii_json", "text_regions": [],
                 "native_output": None, "metadata": metadata}
 
@@ -315,12 +325,13 @@ def florence_eager_loader():
 
 
 class FlorenceAdapter(_Adapter):
-    def __init__(self, model_key: str = "florence2", **kwargs):
+    def __init__(self, model_key: str = "florence2", precision='float16', **kwargs):
         if kwargs.get("load_in_4bit", False):
             raise ValueError("Florence uses its float16 reference profile; set load_in_4bit=False")
         kwargs["load_in_4bit"] = False
         super().__init__(model_key, **kwargs)
-        self.dtype = self.torch.float16
+        if precision not in ('float16','float32'):raise ValueError('Florence precision must be float16 or float32')
+        self.dtype = getattr(self.torch,precision)
         # Remote code is necessary for the exact original Microsoft checkpoint.
         # The default revision is pinned above. Only the legacy dependency scan
         # is adapted for eager attention; model source and weights stay intact.
@@ -352,14 +363,32 @@ class FlorenceAdapter(_Adapter):
                 max_new_tokens=limit, do_sample=False, num_beams=3,
             )
         raw = self.processor.batch_decode(outputs, skip_special_tokens=False)[0]
-        native = self.processor.post_process_generation(raw, task=task, image_size=model_input.size)
-        regions = florence_regions(native, model_input.size, image.size, task)
         metadata = self._metadata(image, model_input, outputs[0].tolist()[1:], limit)
         metadata.update({"task": task, "num_beams": 3, "native_coordinate_size": list(model_input.size),
                          "attention_implementation": "eager", "loader_compatibility": "guarded_optional_flash_import",
-                         "regions_coordinate_size": list(image.size), "native_json_required": False})
+                         "regions_coordinate_size": list(image.size), "native_json_required": False,
+                         "processor_pixel_values_shape":list(inputs['pixel_values'].shape),
+                         "processor_resize":getattr(self.processor.image_processor,'size',None),
+                         "requested_max_new_tokens":self.max_new_tokens,
+                         "effective_limit_reason":"decoder_position_bound_including_start_token"})
+        # Preserve raw generation even when the processor or one region fails.
+        native=None;regions=[];issues=[]
+        try:
+            native=self.processor.post_process_generation(raw,task=task,image_size=model_input.size)
+            payload=native[task];key='quad_boxes' if task=='<OCR_WITH_REGION>' else 'bboxes'
+            boxes,labels=payload[key],payload['labels']
+            if len(boxes)!=len(labels):raise ValueError('Florence labels/boxes length mismatch')
+            for index,(box,label) in enumerate(zip(boxes,labels)):
+                try:
+                    if not label.strip():raise ValueError('Empty Florence text/region label')
+                    regions.extend(florence_regions({task:{key:[box],'labels':[label]}},model_input.size,image.size,task))
+                except (ValueError,TypeError) as exc:issues.append({'region_index':index,'error':str(exc)})
+        except (ValueError,KeyError,TypeError) as exc:issues.append({'error':str(exc)})
+        if metadata['truncated']:issues.append({'error':'Output truncated at decoder generation budget'})
+        if not regions and raw.replace('</s>','').replace('<s>','').replace('<pad>','').strip():
+            issues.append({'error':'Nonempty generation without valid spatial text regions'})
         result = {"raw_text": raw, "output_kind": "ocr_regions", "native_output": native,
-                  "text_regions": regions, "metadata": metadata}
+                  "text_regions": regions, "metadata": metadata,'parse_success':not issues,'parse_warnings':issues}
         if task == "<OCR_WITH_REGION>":
             result["predicted_text"] = "\n".join(region["text"] for region in regions)
         else:
@@ -386,11 +415,12 @@ class FlorenceAdapter(_Adapter):
 
 def load_adapter(model_key: str, *, revision: str | None = None, max_new_tokens: int = 2048,
                  max_input_edge: int = 1280, load_in_4bit: bool | None = None,
-                 token: str | None = None) -> VLMAdapter | FlorenceAdapter:
+                 token: str | None = None, precision='float16') -> VLMAdapter | FlorenceAdapter:
     """Load one model; close it before loading the next. Never installs packages."""
     if model_key not in MODEL_SPECS:
         raise ValueError(f"Unknown model key {model_key!r}; choose one of {sorted(MODEL_SPECS)}")
     quantize = model_key != "florence2" if load_in_4bit is None else load_in_4bit
     adapter_class = FlorenceAdapter if model_key == "florence2" else VLMAdapter
+    extra={'precision':precision} if model_key=='florence2' else {}
     return adapter_class(model_key, revision=revision, max_new_tokens=max_new_tokens,
-                         max_input_edge=max_input_edge, load_in_4bit=quantize, token=token)
+                         max_input_edge=max_input_edge, load_in_4bit=quantize, token=token,**extra)

@@ -2,14 +2,21 @@
   "enabled": false,
   "candidate_vlm": null,
   "candidate_ocr": null,
-  "selection_status": "pending measured v2 benchmark and review",
+  "selection_status": "Qwen3 recommended from audited baseline; training blocked pending annotations, disjoint splits, license review and GPU training smoke test",
   "method": "evaluate LoRA or QLoRA support after architecture inspection",
   "provisional_lora_rank": 16,
   "provisional_lora_alpha": 32,
   "provisional_learning_rate": 0.0001,
   "microbatch_size": 1,
   "target_modules": null,
-  "required_checks": ["baseline_review", "license_review", "reference_annotations", "duplicate_disjoint_splits", "gpu_forward_backward_smoke_test"],
+  "required_checks": [
+    "baseline_review",
+    "license_review",
+    "reference_annotations",
+    "duplicate_disjoint_splits",
+    "gpu_forward_backward_smoke_test"
+  ],
   "evaluation_cohort_excluded_from_training": "configs/selection.json",
-  "training_destination": "/content/drive/MyDrive/Leak_Benchmark_Results/training"
+  "training_destination": "/content/drive/MyDrive/Leak_Benchmark_Results/training",
+  "provisional_primary_candidate": "qwen3_vl"
 }

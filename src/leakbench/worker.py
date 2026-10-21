@@ -6,7 +6,8 @@ from .dataset import records,validate_subset
 from . import pipeline
 from .adapters import load_adapter
 from .ocr_adapters import create_ocr_adapter
-from .legacy_workflow import VLM_KEYS,make_detector,normalize_report
+from .legacy_workflow import VLM_KEYS,TEXT_RULE_ATTRIBUTES,make_detector,normalize_report
+from .validation import validate_redaction
 
 def verify_gpu_model(model):
     mapping=getattr(model,'hf_device_map',{}) or {}
@@ -18,7 +19,7 @@ def verify_gpu_model(model):
 
 def output_dir(run,key,record):return run/key/record['category']/Path(record['filename']).stem
 
-def valid_completed(folder,protocol):
+def valid_completed(folder,protocol,record=None,model=None):
     path=folder/'prediction.json'
     if not path.exists():return False
     try:
@@ -26,8 +27,19 @@ def valid_completed(folder,protocol):
         if not isinstance(r,dict):return False
         hashes=r.get('artifact_sha256',{})
         if not isinstance(hashes,dict):return False
-        required={'predicted.png','redacted.png','raw_predictions.json'}
+        if model is not None and r.get('model_key')!=model:return False
+        if record is not None:
+            if r.get('image_id')!=record['id']:return False
+            if record.get('image_sha256'):
+                if r.get('input_sha256')!=record['image_sha256']:return False
+                if record.get('image_path') and sha(record['image_path'])!=record['image_sha256']:return False
+                if not any(name.startswith('original.') and value==record['image_sha256'] for name,value in hashes.items()):return False
+            if record.get('annotation_sha256'):
+                if r.get('annotation_sha256')!=record['annotation_sha256']:return False
+                if record.get('annotation_path') and sha(record['annotation_path'])!=record['annotation_sha256']:return False
+        required={'predicted.png','redacted.png','raw_predictions.json','redaction_mask.png','redaction_validation.json'}
         return (r.get('status')=='ok' and r.get('protocol_id')==protocol and required.issubset(hashes)
+            and r.get('redaction_validation',{}).get('schema_version')==1
             and any(name.startswith('original.') for name in hashes)
             and all(Path(name).name==name and (folder/name).is_file() and sha(folder/name)==value for name,value in hashes.items()))
     except (ValueError,OSError,TypeError):return False
@@ -46,9 +58,9 @@ def run(job):
     model_dir=run_dir/key;model_dir.mkdir(parents=True,exist_ok=True)
     state_path=model_dir/'state.json';dataset=project/'data/vispr_eval_50'
     validate_subset(dataset,read_json(project/'configs/selection.json'))
-    selected=records(dataset)
-    if job['phase']=='pilot':selected=[next(r for r in selected if r['category']==c) for c in ('documents','images')]
-    pending=[r for r in selected if not valid_completed(output_dir(run_dir,key,r),job['protocol_id'])]
+    from .progress import selected_records,refresh_execution
+    selected=selected_records(records(dataset),job['phase'])
+    pending=[r for r in selected if not valid_completed(output_dir(run_dir,key,r),job['protocol_id'],r,key)]
     if not pending:log('All selected images already verified; model load skipped',model=key);return
     taxonomy=pipeline.load_taxonomy(project/'configs/taxonomy_crosswalk.csv')
     pipeline.FORMAT_RETRIES=config['format_retries']
@@ -69,12 +81,12 @@ def run(job):
     try:
         pinned=read_json(project/'configs/models.json')[key]
         with stage('model_download',state_path,model=key):
-            from huggingface_hub import snapshot_download
+            from .downloads import snapshot_with_retry
             download_start=time.perf_counter()
             download_kwargs={'repo_id':pinned['model_id'],'revision':pinned['revision'],
                 'allow_patterns':['*.safetensors','*.json','*.py','*.txt','*.model','*.jinja']}
             if key=='dots_ocr':download_kwargs['local_dir']=str(project/'.model_cache/DotsOCR')
-            snapshot_download(**download_kwargs)
+            snapshot_with_retry(**download_kwargs)
             download_seconds=time.perf_counter()-download_start
         with stage('model_loading',state_path,model=key):
             load_start=time.perf_counter()
@@ -82,10 +94,12 @@ def run(job):
                 'load_in_4bit':config['load_in_4bit'] if key in VLM_KEYS or key=='chandra' else False,
                 'revision':pinned['revision']}
             if key=='dots_ocr':kw['local_model_dir']=str(project/'.model_cache/DotsOCR')
+            if key=='florence2':kw['precision']=config.get('florence_precision','float16')
             adapter=load_adapter(key,**kw) if key in VLM_KEYS or key=='florence2' else create_ocr_adapter(key,**kw)
             torch.cuda.synchronize();load_seconds=time.perf_counter()-load_start
             placement=verify_gpu_model(adapter.model)
             environment={'gpu':torch.cuda.get_device_name(),'torch':torch.__version__,
+                         'cuda_compute_capability':list(torch.cuda.get_device_capability()),
                          'gpu_total_memory_bytes':torch.cuda.get_device_properties(0).total_memory,**placement}
             write_json(model_dir/f'{job["phase"]}_environment.json',environment)
             write_json(model_dir/f'{job["phase"]}_loading.json',{'download_seconds':download_seconds,'load_seconds':load_seconds,
@@ -99,6 +113,8 @@ def run(job):
             torch.cuda.synchronize();before=time.perf_counter()
             current['preprocessing_seconds']+=before-current['call_started']
             current['generation_calls']+=1
+            write_json(Path(current['artifact_directory'])/'attempt_state.json',
+                {'status':'processing','stage':'inference','inference_attempted':True})
             log('generation',model=key,image_id=current.get('image_id'),call=current['generation_calls'],
                 retry=current['generation_calls']>1)
             try:return original_generate(*args,**kwargs)
@@ -115,55 +131,31 @@ def run(job):
                 end=current.get('generation_finished')
                 if end is not None:current['postprocessing_seconds']+=time.perf_counter()-end
         setattr(adapter,method_name,timed_infer)
-        detector=make_detector(adapter,key,pipeline.detect_pii)
+        if key not in VLM_KEYS and config.get('ocr_preprocessing')=='tiles':
+            from .preprocessing import tiled_extract
+            native_extract=adapter.extract
+            adapter.extract=lambda image:tiled_extract(native_extract,image,edge=config.get('tile_edge',1024),
+                overlap=config.get('tile_overlap',.15),max_tiles=config.get('max_tiles',16))
+        detector=make_detector(adapter,key,lambda image,taxonomy,generator:pipeline.detect_pii(
+            image,taxonomy,generator,repair_partial_entries=config.get('repair_partial_entries',False)))
         for index,record in enumerate(selected,1):
             folder=output_dir(run_dir,key,record);folder.mkdir(parents=True,exist_ok=True)
-            if valid_completed(folder,job['protocol_id']):
+            if valid_completed(folder,job['protocol_id'],record,key):
                 log('Verified completed image reused',model=key,image_id=record['id']);continue
             archive_attempt(folder)
-            current.clear();current.update(image_id=record['id'],preprocessing_seconds=0.,generation_seconds=0.,
-                postprocessing_seconds=0.,generation_calls=0)
-            torch.cuda.reset_peak_memory_stats();image_start=time.perf_counter()
-            original=folder/('original'+Path(record['filename']).suffix)
-            shutil.copy2(record['image_path'],original)
+            write_json(folder/'attempt_state.json',{'status':'processing','stage':'image_loading','inference_attempted':False})
+            refresh_execution(project,run_dir)
+            torch.cuda.reset_peak_memory_stats()
+            from .image_execution import process_image
             with stage('image',state_path,model=key,image_id=record['id'],index=index,total=len(selected)):
-                log('Read input',model=key,image_id=record['id']);t=time.perf_counter()
-                image=pipeline.read_image(record['image_path']);read_seconds=time.perf_counter()-t
-                prediction=detector(image,taxonomy)
-                report={'image_id':record['id'],'status':prediction['status'],'prediction':prediction,
-                    'image_path':str(original),'image_size':list(image.size),'protocol_id':job['protocol_id']}
-                if prediction['status']=='ok':
-                    log('Redaction and annotation comparison',model=key,image_id=record['id'])
-                    t=time.perf_counter()
-                    redacted,overlay,detections=pipeline.redact_and_draw(image,prediction['detections'],config['redaction_padding'])
-                    prediction['detections']=detections
-                    overlay.save(folder/'predicted.png');redacted.save(folder/'redacted.png')
-                    report.update(overlay_path=str(folder/'predicted.png'),redacted_path=str(folder/'redacted.png'),
-                        evaluation=pipeline.evaluate_labels(record['labels'],detections,taxonomy))
-                    current['postprocessing_seconds']+=time.perf_counter()-t
-                else:
-                    report['error']=prediction.get('error') or 'Invalid or truncated model output; inspect raw outputs and attempts.'
-                    from PIL import ImageDraw
-                    overlay=image.copy();ImageDraw.Draw(overlay).text((10,10),'FAILED - no verified redaction',fill='red',stroke_width=2,stroke_fill='white')
-                    overlay.save(folder/'predicted.png')
-                    report['redaction_status']='not_generated_detection_failed'
-                # Auditing is a separate optional run; no hidden second inference here.
-                report['residual_audit']={'status':'not_run','reason':'Separate diagnostic stage; not a ground-truth redaction metric'}
-                elapsed=time.perf_counter()-image_start
-                report=normalize_report(report,record,key)
-                report['timing']={k:current[k] for k in ('preprocessing_seconds','generation_seconds','postprocessing_seconds','generation_calls')}
-                report['timing'].update(read_seconds=read_seconds,total_seconds=elapsed,
-                    peak_gpu_memory_bytes=torch.cuda.max_memory_allocated())
-                write_json(folder/'raw_predictions.json',{'native_outputs':prediction.get('native_outputs',[]),
-                    'attempts':prediction.get('attempts',[]),'error':prediction.get('error')})
-                report['artifact_sha256']={p.name:sha(p) for p in folder.iterdir() if p.is_file() and p.name in
-                    (original.name,'predicted.png','redacted.png','raw_predictions.json')}
-                write_json(folder/'prediction.json',report);timings.append(elapsed)
-                mean=sum(timings)/len(timings)
-                log('Image completed',model=key,image_id=record['id'],status=report['status'],completed=index,
-                    total=len(selected),remaining=len(selected)-index,percent=100*index/len(selected),
-                    average_seconds=round(mean,2),eta_seconds=round(mean*(len(selected)-index)),
-                    stage_name='postprocessing')
+                report=process_image(record,folder,key,job['protocol_id'],config,taxonomy,detector,current,
+                                     peak_memory=torch.cuda.max_memory_allocated)
+                elapsed=report['timing']['total_seconds'];timings.append(elapsed)
+                refresh_execution(project,run_dir)
+                log('Image attempt saved',model=key,image_id=record['id'],inference_status=report['status'],
+                    failure_stage=report.get('failure_stage'),redaction_status=report.get('redaction_status'),
+                    mask_check_passed=report.get('redaction_validation',{}).get('technical_pass',False),
+                    completed=index,total=len(selected),remaining=len(selected)-index)
             if job.get('cloud_model_dir'):
                 try:
                     from .cloud import verified_copy_tree

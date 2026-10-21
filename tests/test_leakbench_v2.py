@@ -33,11 +33,15 @@ from leakbench.orchestrate import start_run,execute_category
 def completed(folder,record,protocol,model='qwen3_vl'):
     folder.mkdir(parents=True,exist_ok=True)
     hashes={}
-    for name in ('original.png','predicted.png','redacted.png','raw_predictions.json'):
-        (folder/name).write_text('synthetic test fixture',encoding='utf-8');hashes[name]=sha(folder/name)
+    for name in ('original.png','predicted.png','redacted.png','raw_predictions.json','redaction_mask.png','redaction_validation.json'):
+        if name=='original.png' and record.get('image_path'):shutil.copy2(record['image_path'],folder/name)
+        else:(folder/name).write_text('synthetic test fixture',encoding='utf-8')
+        hashes[name]=sha(folder/name)
     write_json(folder/'prediction.json',{'image_id':record['id'],'model_key':model,'stratum':record['stratum'],
         'status':'ok','protocol_id':protocol,'ground_truth_attributes':record['labels'],
-        'predicted_attributes':record['labels'],'artifact_sha256':hashes})
+        'predicted_attributes':record['labels'],'artifact_sha256':hashes,
+        'redaction_validation':{'schema_version':1,'technical_pass':True,'privacy_verified':False},
+        'input_sha256':record.get('image_sha256'),'annotation_sha256':record.get('annotation_sha256')})
 
 class V2Contracts(unittest.TestCase):
     @classmethod
@@ -119,6 +123,14 @@ class V2Contracts(unittest.TestCase):
         self.assertFalse(valid_completed(folder,'test'))
         (folder/'prediction.json').write_text('[]');self.assertFalse(valid_completed(folder,'test'))
 
+    def test_resume_rejects_wrong_input_or_model_association(self):
+        folder=self.run/'image';r=self.cohort[0];completed(folder,r,'test')
+        self.assertTrue(valid_completed(folder,'test',r,'qwen3_vl'))
+        self.assertFalse(valid_completed(folder,'test',self.cohort[1],'qwen3_vl'))
+        self.assertFalse(valid_completed(folder,'test',r,'qwen25_vl'))
+        Path(r['image_path']).write_bytes(b'changed after dataset validation')
+        self.assertFalse(valid_completed(folder,'test',r,'qwen3_vl'))
+
     def test_corrupt_prediction_does_not_prevent_error_report(self):
         folder=output_dir(self.run,'qwen3_vl',self.cohort[0]);folder.mkdir(parents=True)
         (folder/'prediction.json').write_text('{')
@@ -184,18 +196,131 @@ class V2Contracts(unittest.TestCase):
     def test_failed_pilot_blocks_full_phase_and_reports_error(self):
         with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable),patch('leakbench.orchestrate.run_command') as call:
             self.quiet(execute_category,self.project,self.run,full=True,save_cloud=False)
-        self.assertEqual(call.call_count,1)
-        self.assertIn('Pilot',read_json(self.run/'qwen3_vl/orchestration_failure.json')['error'])
+        self.assertEqual(call.call_count,0)
+        self.assertIn('Regression gate',read_json(self.run/'qwen3_vl/orchestration_failure.json')['error'])
         self.assertIsNone(read_json(self.run/'reports/summary.json')['winner'])
+
+    def save_partial(self,model,record):
+        from leakbench.pipeline import detect_pii,load_taxonomy
+        detection={'attribute_id':'a19_name_full','bbox_1000':[100,100,500,500],
+                   'location':'field','evidence_source':'explicit_text'}
+        result=detect_pii(None,load_taxonomy(self.project/'configs/taxonomy_crosswalk.csv'),
+            lambda *_:(json.dumps({'detections':[detection,{**detection,'attribute_id':'invalid_label'}]}),False))
+        self.assertEqual(result['status'],'partial')
+        folder=output_dir(self.run,model,record);folder.mkdir(parents=True,exist_ok=True)
+        write_json(folder/'prediction.json',{**result,'image_id':record['id'],'model_key':model,
+            'stratum':record['stratum'],'protocol_id':'test','ground_truth_attributes':record['labels'],
+            'predicted_attributes':['a19_name_full'],
+            'redaction_validation':{'schema_version':1,'technical_pass':False,'privacy_verified':False}})
+        return folder/'prediction.json'
+
+    def test_partial_parser_output_reports_in_both_scopes_without_quality_credit(self):
+        partial_path=self.save_partial('qwen3_vl',self.cohort[0]);before=sha(partial_path)
+        completed(output_dir(self.run,'qwen3_vl',self.cohort[1]),self.cohort[1],'test')
+        r=self.cohort[25];folder=output_dir(self.run,'qwen3_vl',r);folder.mkdir(parents=True)
+        write_json(folder/'prediction.json',{'image_id':r['id'],'model_key':'qwen3_vl','stratum':r['stratum'],
+            'status':'error','protocol_id':'test','ground_truth_attributes':r['labels'],'error':'test failure'})
+        out=self.quiet(report,self.project,self.run,['qwen3_vl','qwen25_vl'])
+        for scope in ('full_taxonomy','shared_text_scope'):
+            result=read_json(out/f'{scope}.json')
+            cov=next(r for r in result['coverage'] if r['model_key']=='qwen3_vl' and r['stratum']=='all')
+            self.assertEqual([cov[k] for k in ('successful_images','failed_images','partial_images','error_images','not_attempted_images')],[1,2,1,1,47])
+            row=next(r for r in result['per_image'] if r['status']=='partial')
+            self.assertEqual(row['predicted_attributes'],['a19_name_full'])
+            self.assertIsNone(row['f1']);self.assertIsNone(row['missed_attributes'])
+            self.assertFalse(row['localization_available']);self.assertFalse(row['text_available'])
+            successful=next(r for r in result['summaries'] if r['model_key']=='qwen3_vl' and r['stratum']=='all' and r['scope']=='all_successful')
+            self.assertEqual(successful['n_images'],1);self.assertEqual(result['common_image_ids'],[])
+        summary=read_json(out/'summary.json')
+        self.assertIsNone(summary['winner']);self.assertFalse(summary['all_saved_mask_checks_passed'])
+        self.assertEqual(sha(partial_path),before)
+        self.assertEqual(read_json(out/'all_results.json')[0]['status'],'partial')
+        self.assertIn('1 partial', (out/'report.md').read_text())
+
+    def test_partial_worker_result_does_not_stop_next_model_or_backup(self):
+        config=read_json(self.run/'run_config.json');config['settings']['models']=['qwen3_vl','qwen25_vl']
+        write_json(self.run/'run_config.json',config)
+        def fake_worker(args,*_,**kwargs):
+            job=read_json(args[-1]);self.save_partial(job['model'],self.cohort[0])
+        with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable), \
+             patch('leakbench.orchestrate.run_command',side_effect=fake_worker) as worker, \
+             patch('leakbench.orchestrate.backup') as backup:
+            out=self.quiet(execute_category,self.project,self.run,save_cloud=True)
+        self.assertEqual(worker.call_count,2);self.assertGreaterEqual(backup.call_count,3)
+        self.assertFalse(list(self.run.glob('*/orchestration_failure.json')))
+        self.assertFalse((self.run/'reporting_failure.json').exists())
+        self.assertTrue(all(r['partial_images']==1 for r in read_json(out/'summary.json')['coverage']))
+
+    def test_reporting_exception_does_not_interrupt_models_or_backup(self):
+        config=read_json(self.run/'run_config.json');config['settings']['models']=['qwen3_vl','qwen25_vl']
+        write_json(self.run/'run_config.json',config)
+        with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable), \
+             patch('leakbench.orchestrate.run_command') as worker, \
+             patch('leakbench.orchestrate.report',side_effect=ValueError('test report failure')), \
+             patch('leakbench.orchestrate.backup') as backup:
+            with self.assertRaisesRegex(RuntimeError,'do not rerun inference'):
+                self.quiet(execute_category,self.project,self.run,save_cloud=True)
+        self.assertEqual(worker.call_count,2);self.assertGreaterEqual(backup.call_count,3)
+        self.assertFalse(list(self.run.glob('*/orchestration_failure.json')))
+        failure=read_json(self.run/'reporting_failure.json')
+        self.assertEqual(failure['status'],'failed');self.assertEqual(failure['error'],'test report failure')
+
+    def test_transient_reporting_failure_is_resolved_without_repeating_worker(self):
+        def flaky_report(*args):
+            if not (self.run/'reporting_failure.json').exists():raise OSError('temporary reporting failure')
+            return report(*args)
+        with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable), \
+             patch('leakbench.orchestrate.run_command') as worker, \
+             patch('leakbench.orchestrate.report',side_effect=flaky_report):
+            out=self.quiet(execute_category,self.project,self.run,save_cloud=False)
+        self.assertEqual(worker.call_count,1);self.assertTrue((out/'summary.json').exists())
+        self.assertEqual(read_json(self.run/'reporting_failure.json')['status'],'resolved')
+
+    def test_colab_repair_rebuilds_saved_partial_without_inference_or_changing_evidence(self):
+        prediction=self.save_partial('qwen3_vl',self.cohort[0])
+        shutil.copytree(ROOT/'src/leakbench',self.project/'src/leakbench',ignore=shutil.ignore_patterns('__pycache__'))
+        metrics=self.project/'src/leakbench/metrics.py'
+        metrics.write_text(metrics.read_text().replace('not in {"ok", "partial", "error"}',
+                                                      'not in {"ok", "error"}'))
+        snapshot=self.run/'source/leakbench/metrics.py';snapshot.parent.mkdir(parents=True)
+        shutil.copy2(metrics,snapshot)
+        failure=self.run/'qwen3_vl/orchestration_failure.json'
+        write_json(failure,{'error':'status must be ok or error'})
+        retained={p:sha(p) for p in (prediction,self.run/'run_config.json',snapshot,failure)}
+        script='''
+import runpy,sys
+from pathlib import Path
+from unittest.mock import patch
+project,run,recovery=map(Path,sys.argv[1:])
+sys.path.insert(0,str(project/'src'))
+from leakbench.reporting import report
+try:report(project,run,['qwen3_vl'])
+except ValueError:pass
+else:raise AssertionError('Original partial-status failure was not reproduced')
+with patch('leakbench.execution.run_command',side_effect=AssertionError('No subprocess or model allowed')),patch('leakbench.cloud.backup') as backup:
+    values=runpy.run_path(str(recovery),init_globals={'PROJECT':project,'run_dir':run})
+    assert backup.call_count==1
+assert (values['report_dir']/'summary.json').is_file()
+'''
+        proc=subprocess.run([sys.executable,'-c',script,str(self.project),str(self.run),
+                             str(ROOT/'dist/repair_colab_reporting.py')],capture_output=True,text=True,timeout=30)
+        self.assertEqual(proc.returncode,0,proc.stdout+proc.stderr)
+        self.assertEqual({p:sha(p) for p in retained},retained)
+        repair=read_json(next(self.run.glob('reporting_repairs/*/repair.json')))
+        self.assertEqual(repair['status'],'reports_regenerated')
+        self.assertEqual(repair['historical_reporting_failures'],['qwen3_vl/orchestration_failure.json'])
+        cov=read_json(self.run/'reports/summary.json')['coverage'][0]
+        self.assertEqual(cov['partial_images'],1);self.assertEqual(cov['successful_images'],0)
 
     def test_worker_crash_is_an_explicit_image_failure(self):
         def fail_worker(*args,**kwargs):
             write_json(self.run/'qwen3_vl/state.json',{'stage':'image','image_id':self.cohort[0]['id']})
             raise TimeoutError('synthetic worker timeout')
         with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable),patch('leakbench.orchestrate.run_command',side_effect=fail_worker):
-            self.quiet(execute_category,self.project,self.run,full=True,save_cloud=False)
+            self.quiet(execute_category,self.project,self.run,stage='single',save_cloud=False)
         coverage=read_json(self.run/'reports/summary.json')['coverage'][0]
-        self.assertEqual(coverage['failed_images'],1);self.assertEqual(coverage['not_attempted_images'],49)
+        self.assertEqual(coverage['failed_images'],1);self.assertEqual(coverage['not_attempted_images'],0)
+        self.assertEqual(coverage['expected_images'],1)  # single mode reports its planned workload
 
     def test_cloud_failure_does_not_abort_valid_pilot(self):
         def fake_worker(*args,**kwargs):
@@ -203,8 +328,8 @@ class V2Contracts(unittest.TestCase):
             chosen=[next(r for r in self.cohort if r['category']==c) for c in ('documents','images')]
             for r in chosen:completed(output_dir(self.run,'qwen3_vl',r),r,job['protocol_id'])
         with patch('leakbench.orchestrate.setup_profile',return_value=sys.executable),patch('leakbench.orchestrate.run_command',side_effect=fake_worker) as call,patch('leakbench.orchestrate.backup',side_effect=OSError('test Drive unavailable')):
-            self.quiet(execute_category,self.project,self.run,full=True,save_cloud=True)
-        self.assertEqual(call.call_count,2)
+            self.quiet(execute_category,self.project,self.run,stage='single',save_cloud=True)
+        self.assertEqual(call.call_count,1)
         self.assertFalse((self.run/'qwen3_vl/orchestration_failure.json').exists())
         self.assertTrue((self.run/'cloud_failure.json').exists())
 
@@ -234,7 +359,7 @@ class NotebookPackaging(unittest.TestCase):
             payload=next(ast.literal_eval(n.value) for n in ast.parse(bootstrap).body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='PAYLOAD' for t in n.targets))
             with zipfile.ZipFile(io.BytesIO(base64.b64decode(payload))) as z:
                 for name in z.namelist():
-                    self.assertTrue(name.startswith(('src/leakbench/','configs/')))
+                    self.assertTrue(name.startswith(('src/leakbench/','configs/')) or name=='TRACKER.md')
                     self.assertEqual(z.read(name),(ROOT/name).read_bytes(),name)
                 self.assertIn('src/leakbench/worker.py',z.namelist())
             with tempfile.TemporaryDirectory(dir=TEMP_ROOT) as folder:

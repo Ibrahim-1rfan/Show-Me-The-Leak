@@ -31,5 +31,7 @@ def verified_copy_tree(source,destination):
 def backup(project,category,run_id):
     project=Path(project)
     if not Path('/content/drive/MyDrive').is_dir():raise RuntimeError('Mount Google Drive with drive.mount before backup.')
+    # Copy tracker into each unique run so its handover survives with the artifacts.
+    if (project/'TRACKER.md').exists():shutil.copy2(project/'TRACKER.md',project/'results'/category/run_id/'TRACKER.md')
     verified_copy_tree(project/'data/vispr_eval_50',DRIVE_ROOT/'benchmark_v2/data/vispr_eval_50')
     return verified_copy_tree(project/'results'/category/run_id,DRIVE_ROOT/'benchmark_v2/results'/category/run_id)

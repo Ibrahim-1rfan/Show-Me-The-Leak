@@ -211,16 +211,21 @@ def make_detector(adapter, model_key, vlm_detect):
             else:
                 native = adapter.extract(image) if hasattr(adapter, 'extract') else adapter.infer(image, '')
                 native_calls.append(native)
-                if native.get('parse_success') is False:
-                    raise ValueError('Native OCR parsing failed; see native_outputs and parse_warnings.')
-                if native.get('metadata', {}).get('truncated', native.get('truncated', False)):
-                    raise ValueError('OCR output reached token limit; incomplete output is not a valid empty result.')
-                result = {'status': 'ok', 'detections': ocr_to_pii(native, image.size, taxonomy), 'attempts': []}
+                incomplete=native.get('parse_success') is False or native.get('metadata',{}).get('truncated',native.get('truncated',False))
+                detections=ocr_to_pii(native,image.size,taxonomy)
+                result={'status':('partial' if detections else 'error') if incomplete else 'ok','detections':detections,'attempts':[]}
+                if incomplete:
+                    result['error']='Incomplete native OCR output; inspect preserved raw output and parse_warnings.'
+                    result['failure_stage']='output_decoding_or_parsing'
+                elif not native['text_regions']:
+                    result['diagnostic']='layout_only_no_text' if native.get('metadata',{}).get('ignored_nontext_blocks') else 'no_recognized_text'
+                elif not detections:result['diagnostic']='recognized_text_without_pii_rule_match'
                 result['predicted_text'] = native.get('predicted_text', '\n'.join(r['text'] for r in native['text_regions']))
             result['native_outputs'] = native_calls
         except Exception as exc:
             result = {'status': 'error', 'detections': None, 'attempts': [], 'native_outputs': native_calls,
-                      'error': f'{type(exc).__name__}: {exc}'}
+                      'error': f'{type(exc).__name__}: {exc}',
+                      'failure_stage':'sensitive_detection_or_coordinates' if native_calls else 'inference'}
         result['inference_seconds'] = time.perf_counter() - started
         return result
     return detector

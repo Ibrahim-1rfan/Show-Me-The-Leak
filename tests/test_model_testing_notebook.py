@@ -40,7 +40,9 @@ class NotebookTests(unittest.TestCase):
             if cell['cell_type'] == 'code':
                 source = ''.join(cell['source'])
                 if cell.get('metadata', {}).get('tags') != ['install']:
-                    ast.parse(source)
+                    # Translate valid user-added Colab !commands without running them.
+                    from IPython.core.inputtransformer2 import TransformerManager
+                    ast.parse(TransformerManager().transform_cell(source))
                 # Executed user outputs are retained; edited cells are cleared.
                 self.assertTrue(cell['execution_count'] is None or isinstance(cell['execution_count'], int))
                 self.assertIsInstance(cell['outputs'], list)

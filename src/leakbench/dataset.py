@@ -1,27 +1,54 @@
 """Frozen visually reviewed cohort; byte-preserving materialization and checks."""
-import csv, hashlib, io, json, shutil, urllib.request, zipfile
+import csv, hashlib, io, json, shutil, urllib.request, urllib.error, zipfile, re, time, http.client
 from collections import Counter
 from pathlib import Path
 from PIL import Image, ImageOps
 from .common import fingerprint, read_json, write_json, sha, log, stage
 
-SOURCE_URL='https://huggingface.co/datasets/Ibrahim1rfan/VISPR/resolve/main/train2017.zip'
+SOURCE_URL='https://huggingface.co/datasets/Ibrahim1rfan/VISPR/resolve/831e0de941ddf741fa00217c9d78d91b57c9af93/train2017.zip'
 FORMATS={'JPEG':'.jpg','PNG':'.png','WEBP':'.webp','BMP':'.bmp','GIF':'.gif','MPO':'.mpo'}
 
-def download_archive(destination,url=SOURCE_URL):
+def download_archive(destination,url=SOURCE_URL,attempts=3):
     from tqdm.auto import tqdm
     destination=Path(destination);destination.parent.mkdir(parents=True,exist_ok=True)
     if destination.exists():
         if not zipfile.is_zipfile(destination):raise ValueError('Cached archive is invalid; inspect it before replacing.')
         log('Reusing dataset archive',path=str(destination));return destination
-    part=destination.with_suffix('.zip.part');offset=part.stat().st_size if part.exists() else 0
-    request=urllib.request.Request(url,headers={'Range':f'bytes={offset}-'} if offset else {})
-    with urllib.request.urlopen(request,timeout=60) as response:
-        append=offset>0 and response.status==206
-        if not append:offset=0
-        length=response.headers.get('Content-Length');total=offset+int(length) if length else None
-        with part.open('ab' if append else 'wb') as f,tqdm(total=total,initial=offset,unit='B',unit_scale=True,desc='VISPR download') as bar:
-            while block:=response.read(1024*1024):f.write(block);bar.update(len(block))
+    part=destination.with_suffix('.zip.part');meta=destination.with_suffix('.download.json')
+    log('Dataset source',dataset='Ibrahim1rfan/VISPR',representation='ZIP of train2017 image/JSON pairs; not a datasets table',url=url)
+    for attempt in range(1,attempts+1):
+        offset=part.stat().st_size if part.exists() else 0
+        previous=read_json(meta) if meta.exists() else {}
+        if offset and previous.get('url')!=url:raise ValueError('Unverified partial download source; retain file and choose a fresh cache path')
+        headers={'Range':f'bytes={offset}-'} if offset else {}
+        if offset and previous.get('etag'):headers['If-Range']=previous['etag']
+        try:
+            log('Dataset connect/download',attempt=attempt,resume_bytes=offset)
+            with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=60) as response:
+                append=offset>0 and response.status==206
+                if offset and not append:raise ValueError('Server did not honor resume range; partial file retained, use a fresh cache path')
+                length=response.headers.get('Content-Length');total=offset+int(length) if length else None
+                if append:
+                    match=re.fullmatch(r'bytes (\d+)-(\d+)/(\d+)',response.headers.get('Content-Range',''))
+                    if not match or int(match[1])!=offset:raise ValueError('Invalid download Content-Range; refusing mixed archive')
+                    total=int(match[3])
+                    if previous.get('total') and total!=previous['total']:raise ValueError('Source size changed during resume')
+                    if previous.get('etag') and response.headers.get('ETag')!=previous['etag']:raise ValueError('Source ETag changed during resume')
+                if total and shutil.disk_usage(destination.parent).free < total-offset+200*1024**2:
+                    raise OSError('Insufficient disk for the full VISPR ZIP plus subset; upload the verified vispr_eval_50.zip instead')
+                write_json(meta,{'url':url,'etag':response.headers.get('ETag'),'total':total,'status':'downloading'})
+                with part.open('ab' if append else 'wb') as f,tqdm(total=total,initial=offset,unit='B',unit_scale=True,desc='VISPR download') as bar:
+                    while block:=response.read(1024*1024):f.write(block);bar.update(len(block))
+                if total and part.stat().st_size!=total:raise ConnectionError('Incomplete dataset transfer; cached bytes retained')
+            break
+        except urllib.error.HTTPError as exc:
+            if exc.code in (401,403):raise RuntimeError(f'Dataset access denied ({exc.code}); confirm repository access. No alternate dataset used.') from exc
+            if exc.code==404:raise RuntimeError('Dataset revision or archive path not found; no alternate dataset used') from exc
+            if exc.code not in (429,500,502,503,504) or attempt==attempts:raise
+            log('Dataset HTTP retry',status=exc.code,attempt=attempt);time.sleep(5*attempt)
+        except (urllib.error.URLError,TimeoutError,ConnectionError,http.client.IncompleteRead) as exc:
+            if attempt==attempts:raise RuntimeError(f'Dataset network/transfer stage failed after {attempt} attempts; partial cache retained: {type(exc).__name__}') from exc
+            log('Dataset network retry',attempt=attempt,error_type=type(exc).__name__);time.sleep(5*attempt)
     if not zipfile.is_zipfile(part):raise ValueError('Download is not a ZIP archive; incomplete file retained for inspection.')
     part.replace(destination);return destination
 
@@ -115,4 +142,4 @@ def records(folder):
     return [dict(id=r['original_id'],filename=r['filename'],category=r['category'],
             stratum='document' if r['category']=='documents' else 'general',
             image_path=folder/r['filename'],annotation_path=folder/r['annotation_reference'],
-            labels=json.loads(r['labels'])) for r in rows]
+            labels=json.loads(r['labels']),image_sha256=r['image_sha256'],annotation_sha256=r['annotation_sha256']) for r in rows]

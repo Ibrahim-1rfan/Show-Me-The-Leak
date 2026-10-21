@@ -1,0 +1,92 @@
+[
+  {
+    "path": "__pycache__/",
+    "reason": "regenerable bytecode or synthetic temporary test files",
+    "files": 6,
+    "bytes": 88332,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "src/leakbench/__pycache__/",
+    "reason": "regenerable bytecode or synthetic temporary test files",
+    "files": 22,
+    "bytes": 200356,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tests/__pycache__/",
+    "reason": "regenerable bytecode or synthetic temporary test files",
+    "files": 11,
+    "bytes": 131191,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "scripts/__pycache__/",
+    "reason": "regenerable bytecode or synthetic temporary test files",
+    "files": 1,
+    "bytes": 6804,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/v2_tests/",
+    "reason": "regenerable bytecode or synthetic temporary test files",
+    "files": 0,
+    "bytes": 0,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/viewer_test_deps/",
+    "reason": "temporary widget packages; first install requirements-dev.txt in an isolated environment",
+    "files": 7839,
+    "bytes": 51188393,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/handoff_env/",
+    "reason": "fresh development verification environment; recreatable from requirements-dev.txt",
+    "files": 17168,
+    "bytes": 234734296,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/handoff_source_njo2mrod/",
+    "reason": "source-only verification copy and test logs; retain logs before deleting",
+    "files": 135,
+    "bytes": 8032528,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/handoff_dependencies.log",
+    "reason": "Duplicate installation log; identical preserved copy in docs/handoff_20261021",
+    "files": 1,
+    "bytes": 1694,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  },
+  {
+    "path": "tmp/handoff_dependencies_retry.log",
+    "reason": "Duplicate installation log; identical preserved copy in docs/handoff_20261021",
+    "files": 1,
+    "bytes": 5881,
+    "status": "deleted",
+    "date": "2026-10-21",
+    "authorization": "User requested deletion of old unimportant files; limited to audited disposable files."
+  }
+]

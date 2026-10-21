@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-21",
+  "python": "3.10.11",
+  "source_only_copy_without_data_or_results": true,
+  "offline_tests_existing_environment": {
+    "passed": 131,
+    "seconds": 74.51
+  },
+  "offline_tests_fresh_environment": {
+    "passed": 131,
+    "seconds": 77.488
+  },
+  "requirements_dev_install": "passed in project-local fresh venv after network-enabled retry",
+  "pip_check": "No broken requirements found",
+  "initial_failures": [
+    "Sandbox DNS prevented first dependency installation.",
+    "A test invocation before dependency installation completed failed imports; rerun after completed install passed.",
+    "Final notebook rebuild hit transient Windows OSError 22; immediate retry succeeded and exact snapshot checks were rerun."
+  ],
+  "benchmark_audit": {
+    "exports": 7,
+    "prediction_records_including_reuse": 237,
+    "hashed_run_files": 2694,
+    "source_hashes_per_export": 22,
+    "artifact_hash_failures": 0,
+    "redaction_recheck_disagreements": 0,
+    "all_saved_metric_scopes_recomputed": true
+  },
+  "not_performed": [
+    "new GPU inference",
+    "training",
+    "live Drive durability verification",
+    "Git commit/push"
+  ],
+  "scope": "Verification of local handoff source, not publication of these changes on GitHub.",
+  "authorized_cleanup": {
+    "date": "2026-10-21",
+    "files_deleted": 25184,
+    "bytes_deleted": 294389475,
+    "targeted_packaging_test": "1 passed in 1.668 seconds",
+    "full_suite_rerun": false,
+    "record": "docs/audit/cleanup_candidates.json",
+    "final_checks": {
+      "source_handoff_files_checked": 91,
+      "git_selected_files": 92,
+      "private_generated_candidates": 0,
+      "files_over_10MB": 0,
+      "documentation_links": "pass",
+      "clean_notebooks_exact_snapshots": "pass",
+      "credential_pattern_scan": "pass",
+      "git_diff_check": "pass",
+      "all_10_deleted_targets_absent": true
+    }
+  }
+}
