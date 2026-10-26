@@ -257,6 +257,13 @@ recovery=build_recovery(ROOT)
 with zipfile.ZipFile(dist/'show_me_the_leak_v2.zip','w',zipfile.ZIP_DEFLATED) as z:
     for path in [*files,*sorted((ROOT/'notebooks').glob('*.ipynb')),ROOT/'README.md',
                  ROOT/'GUIDE.md',ROOT/'BENCHMARK_REPORT.md',ROOT/'requirements-dev.txt',
+                 ROOT/'attributes.tsv',ROOT/'Images Classification.txt',ROOT/'experiments.md',
+                 ROOT/'scripts/prepare_training_data.py',*sorted((ROOT/'docs/attribute_selection').glob('*')),
+                 ROOT/'scripts/prepare_manual_annotation.py', ROOT/'scripts/validate_manual_annotation.py',
+                 ROOT/'scripts/import_manual_label_studio.py', ROOT/'tests/test_manual_annotation.py',
+                 ROOT/'scripts/start_label_studio.py', ROOT/'Start Annotation.cmd', ROOT/'requirements-annotation.txt',
+                 ROOT/'scripts/configure_annotation_storage.py',
+                 *sorted((ROOT/'docs/manual_annotation').glob('*')),
                  *sorted((ROOT/'docs').glob('*.md')),ROOT/'scripts/build_notebooks.py',
                  *sorted((ROOT/'docs/audit').glob('*.json')),
                  ROOT/'tests/test_leakbench_v2.py',ROOT/'tests/test_regression_repair.py',ROOT/'tests/test_execution_recovery.py',

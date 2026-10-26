@@ -18,5 +18,9 @@
   ],
   "evaluation_cohort_excluded_from_training": "configs/selection.json",
   "training_destination": "/content/drive/MyDrive/Leak_Benchmark_Results/training",
-  "provisional_primary_candidate": "qwen3_vl"
+  "provisional_primary_candidate": "qwen3_vl",
+  "initial_objective": "image-level multi-label classification; spatial supervision requires reviewed annotations",
+  "classification_taxonomy": "configs/selected_attributes.json",
+  "prepared_data": "data/training_preparation/classification_targets.jsonl",
+  "dataset_status": "provisional: type, near-duplicate and per-class split review required"
 }

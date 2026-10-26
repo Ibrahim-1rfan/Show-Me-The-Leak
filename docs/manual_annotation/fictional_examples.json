@@ -1,0 +1,187 @@
+[
+  {
+    "schema_version": "vispr-manual-v1",
+    "annotation_id": "fictional_example0",
+    "source_id": "fictional_not_a_dataset_image",
+    "image_file": "fictional.png",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "width": 1000,
+    "height": 800,
+    "split": "train",
+    "annotator": "Fictional Annotator",
+    "coordinate_frame": "exif_upright_normalized_xyxy",
+    "status": "needs_review",
+    "image_type": "document",
+    "quality": "clear",
+    "contains_selected_pii": false,
+    "selected_categories": [],
+    "instances": [],
+    "full_image_checked": true,
+    "updated_at": "2026-10-24T00:00:00Z",
+    "notes": "Fictional schema example, not dataset evidence.",
+    "review": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  },
+  {
+    "schema_version": "vispr-manual-v1",
+    "annotation_id": "fictional_example1",
+    "source_id": "fictional_not_a_dataset_image",
+    "image_file": "fictional.png",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "width": 1000,
+    "height": 800,
+    "split": "train",
+    "annotator": "Fictional Annotator",
+    "coordinate_frame": "exif_upright_normalized_xyxy",
+    "status": "needs_review",
+    "image_type": "document",
+    "quality": "clear",
+    "contains_selected_pii": true,
+    "selected_categories": [
+      "a19_name_full"
+    ],
+    "instances": [
+      {
+        "instance_id": "instance_1",
+        "attribute_id": "a19_name_full",
+        "attribute_name": "Full Name",
+        "bbox": [
+          0.1,
+          0.1,
+          0.4,
+          0.2
+        ],
+        "localization": "localized",
+        "visibility": "fully_visible",
+        "manually_verified": false,
+        "notes": ""
+      }
+    ],
+    "full_image_checked": true,
+    "updated_at": "2026-10-24T00:00:00Z",
+    "notes": "Fictional schema example, not dataset evidence.",
+    "review": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  },
+  {
+    "schema_version": "vispr-manual-v1",
+    "annotation_id": "fictional_example2",
+    "source_id": "fictional_not_a_dataset_image",
+    "image_file": "fictional.png",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "width": 1000,
+    "height": 800,
+    "split": "train",
+    "annotator": "Fictional Annotator",
+    "coordinate_frame": "exif_upright_normalized_xyxy",
+    "status": "needs_review",
+    "image_type": "document",
+    "quality": "clear",
+    "contains_selected_pii": true,
+    "selected_categories": [
+      "a31_passport",
+      "a19_name_full",
+      "a9_face_complete"
+    ],
+    "instances": [
+      {
+        "instance_id": "instance_1",
+        "attribute_id": "a31_passport",
+        "attribute_name": "Passport",
+        "bbox": [
+          0.05,
+          0.05,
+          0.95,
+          0.95
+        ],
+        "localization": "localized",
+        "visibility": "fully_visible",
+        "manually_verified": false,
+        "notes": ""
+      },
+      {
+        "instance_id": "instance_2",
+        "attribute_id": "a19_name_full",
+        "attribute_name": "Full Name",
+        "bbox": [
+          0.3,
+          0.2,
+          0.7,
+          0.25
+        ],
+        "localization": "localized",
+        "visibility": "fully_visible",
+        "manually_verified": false,
+        "notes": ""
+      },
+      {
+        "instance_id": "instance_3",
+        "attribute_id": "a9_face_complete",
+        "attribute_name": "Face (Complete)",
+        "bbox": [
+          0.1,
+          0.3,
+          0.28,
+          0.6
+        ],
+        "localization": "localized",
+        "visibility": "fully_visible",
+        "manually_verified": false,
+        "notes": ""
+      }
+    ],
+    "full_image_checked": true,
+    "updated_at": "2026-10-24T00:00:00Z",
+    "notes": "Fictional schema example, not dataset evidence.",
+    "review": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  },
+  {
+    "schema_version": "vispr-manual-v1",
+    "annotation_id": "fictional_example3",
+    "source_id": "fictional_not_a_dataset_image",
+    "image_file": "fictional.png",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "width": 1000,
+    "height": 800,
+    "split": "train",
+    "annotator": "Fictional Annotator",
+    "coordinate_frame": "exif_upright_normalized_xyxy",
+    "status": "needs_review",
+    "image_type": "document",
+    "quality": "clear",
+    "contains_selected_pii": true,
+    "selected_categories": [
+      "a8_signature"
+    ],
+    "instances": [
+      {
+        "instance_id": "instance_1",
+        "attribute_id": "a8_signature",
+        "attribute_name": "Signature",
+        "bbox": null,
+        "localization": "unlocalizable",
+        "visibility": "uncertain",
+        "manually_verified": false,
+        "notes": "Fictional example: signature category recognizable but boundary cannot be located."
+      }
+    ],
+    "full_image_checked": true,
+    "updated_at": "2026-10-24T00:00:00Z",
+    "notes": "Fictional schema example, not dataset evidence.",
+    "review": {
+      "status": "pending",
+      "reviewer": null,
+      "reviewed_at": null
+    }
+  }
+]

@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-22",
+  "taxonomy_labels": 67,
+  "selected_labels": 28,
+  "targets_checked_against_original_json": 1200,
+  "safe_negatives": 120,
+  "seeded_cached_rerun_manifest_identical": true,
+  "manifest_sha256": "2b6630b8c98a32666cd4d005fc77f83b5da4367ab628a4f5b2c16f4bd8318c0e",
+  "training_performed": false,
+  "human_review_complete": false
+}

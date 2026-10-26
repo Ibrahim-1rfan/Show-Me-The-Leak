@@ -1,0 +1,274 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "VISPR manual v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "annotation_id",
+    "source_id",
+    "image_file",
+    "sha256",
+    "width",
+    "height",
+    "split",
+    "annotator",
+    "coordinate_frame",
+    "status",
+    "image_type",
+    "quality",
+    "contains_selected_pii",
+    "selected_categories",
+    "full_image_checked",
+    "updated_at",
+    "notes",
+    "review",
+    "instances"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "vispr-manual-v1"
+    },
+    "annotation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "image_file": {
+      "type": "string"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "width": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "height": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "split": {
+      "enum": [
+        "train",
+        "validation",
+        "test"
+      ]
+    },
+    "annotator": {
+      "type": "string"
+    },
+    "coordinate_frame": {
+      "const": "exif_upright_normalized_xyxy"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "in_progress",
+        "annotated",
+        "needs_review",
+        "approved"
+      ]
+    },
+    "image_type": {
+      "enum": [
+        null,
+        "general",
+        "document",
+        "uncertain"
+      ]
+    },
+    "quality": {
+      "enum": [
+        null,
+        "clear",
+        "unclear",
+        "corrupt",
+        "ambiguous"
+      ]
+    },
+    "contains_selected_pii": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "selected_categories": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "a7_fingerprint",
+          "a8_signature",
+          "a9_face_complete",
+          "a10_face_partial",
+          "a11_tattoo",
+          "a19_name_full",
+          "a20_name_first",
+          "a21_name_last",
+          "a24_birth_date",
+          "a29_ausweis",
+          "a30_credit_card",
+          "a31_passport",
+          "a32_drivers_license",
+          "a33_student_id",
+          "a35_mail",
+          "a37_receipt",
+          "a38_ticket",
+          "a49_phone",
+          "a73_landmark",
+          "a74_address_current_complete",
+          "a75_address_current_partial",
+          "a78_address_home_complete",
+          "a79_address_home_partial",
+          "a82_date_time",
+          "a85_username",
+          "a90_email",
+          "a103_license_plate_complete",
+          "a104_license_plate_partial"
+        ]
+      }
+    },
+    "full_image_checked": {
+      "type": "boolean"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    },
+    "review": {
+      "type": "object",
+      "required": [
+        "status",
+        "reviewer",
+        "reviewed_at"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "pending",
+            "needs_review",
+            "approved"
+          ]
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewed_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "instances": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attribute_id": {
+            "enum": [
+              "a7_fingerprint",
+              "a8_signature",
+              "a9_face_complete",
+              "a10_face_partial",
+              "a11_tattoo",
+              "a19_name_full",
+              "a20_name_first",
+              "a21_name_last",
+              "a24_birth_date",
+              "a29_ausweis",
+              "a30_credit_card",
+              "a31_passport",
+              "a32_drivers_license",
+              "a33_student_id",
+              "a35_mail",
+              "a37_receipt",
+              "a38_ticket",
+              "a49_phone",
+              "a73_landmark",
+              "a74_address_current_complete",
+              "a75_address_current_partial",
+              "a78_address_home_complete",
+              "a79_address_home_partial",
+              "a82_date_time",
+              "a85_username",
+              "a90_email",
+              "a103_license_plate_complete",
+              "a104_license_plate_partial"
+            ]
+          },
+          "attribute_name": {
+            "type": "string"
+          },
+          "bbox": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "minItems": 4,
+                "maxItems": 4,
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            ]
+          },
+          "localization": {
+            "enum": [
+              "localized",
+              "uncertain",
+              "unlocalizable"
+            ]
+          },
+          "visibility": {
+            "enum": [
+              "fully_visible",
+              "partially_visible",
+              "obscured",
+              "uncertain"
+            ]
+          },
+          "manually_verified": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance_id",
+          "attribute_id",
+          "attribute_name",
+          "bbox",
+          "localization",
+          "visibility",
+          "manually_verified",
+          "notes"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

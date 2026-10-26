@@ -1,0 +1,141 @@
+{
+  "seed": 421,
+  "images": 1200,
+  "attributes": 28,
+  "primary_assignments": [
+    {
+      "annotator": "Team Member 1",
+      "images": 400,
+      "types": {
+        "general": 280,
+        "document": 120
+      },
+      "splits": {
+        "train": 320,
+        "validation": 80
+      },
+      "selected_label_counts": {
+        "a20_name_first": 29,
+        "a82_date_time": 126,
+        "a19_name_full": 101,
+        "a75_address_current_partial": 123,
+        "a8_signature": 47,
+        "a38_ticket": 27,
+        "a73_landmark": 94,
+        "a74_address_current_complete": 22,
+        "a103_license_plate_complete": 38,
+        "a10_face_partial": 112,
+        "a37_receipt": 22,
+        "a49_phone": 27,
+        "a85_username": 18,
+        "a90_email": 13,
+        "a9_face_complete": 148,
+        "a29_ausweis": 6,
+        "a21_name_last": 28,
+        "a104_license_plate_partial": 29,
+        "a11_tattoo": 40,
+        "a31_passport": 20,
+        "a30_credit_card": 12,
+        "a24_birth_date": 23,
+        "a7_fingerprint": 8,
+        "a79_address_home_partial": 7,
+        "a35_mail": 19,
+        "a32_drivers_license": 9,
+        "a33_student_id": 10,
+        "a78_address_home_complete": 13
+      }
+    },
+    {
+      "annotator": "Team Member 2",
+      "images": 400,
+      "types": {
+        "document": 120,
+        "general": 280
+      },
+      "splits": {
+        "train": 320,
+        "validation": 80
+      },
+      "selected_label_counts": {
+        "a20_name_first": 29,
+        "a35_mail": 20,
+        "a19_name_full": 100,
+        "a33_student_id": 10,
+        "a73_landmark": 96,
+        "a75_address_current_partial": 121,
+        "a82_date_time": 127,
+        "a8_signature": 48,
+        "a9_face_complete": 148,
+        "a10_face_partial": 112,
+        "a11_tattoo": 40,
+        "a37_receipt": 22,
+        "a74_address_current_complete": 22,
+        "a90_email": 13,
+        "a49_phone": 28,
+        "a103_license_plate_complete": 38,
+        "a104_license_plate_partial": 29,
+        "a85_username": 18,
+        "a29_ausweis": 5,
+        "a78_address_home_complete": 14,
+        "a79_address_home_partial": 7,
+        "a21_name_last": 28,
+        "a30_credit_card": 12,
+        "a38_ticket": 29,
+        "a31_passport": 19,
+        "a7_fingerprint": 7,
+        "a32_drivers_license": 9,
+        "a24_birth_date": 22
+      }
+    },
+    {
+      "annotator": "Team Member 3",
+      "images": 400,
+      "types": {
+        "general": 280,
+        "document": 120
+      },
+      "splits": {
+        "train": 320,
+        "validation": 80
+      },
+      "selected_label_counts": {
+        "a10_face_partial": 113,
+        "a73_landmark": 95,
+        "a75_address_current_partial": 123,
+        "a9_face_complete": 147,
+        "a38_ticket": 25,
+        "a82_date_time": 129,
+        "a11_tattoo": 39,
+        "a49_phone": 28,
+        "a104_license_plate_partial": 29,
+        "a37_receipt": 21,
+        "a19_name_full": 101,
+        "a30_credit_card": 13,
+        "a21_name_last": 28,
+        "a31_passport": 19,
+        "a8_signature": 47,
+        "a90_email": 13,
+        "a103_license_plate_complete": 38,
+        "a33_student_id": 11,
+        "a78_address_home_complete": 13,
+        "a24_birth_date": 23,
+        "a20_name_first": 29,
+        "a35_mail": 19,
+        "a32_drivers_license": 9,
+        "a7_fingerprint": 8,
+        "a74_address_current_complete": 22,
+        "a85_username": 17,
+        "a79_address_home_partial": 7,
+        "a29_ausweis": 6
+      }
+    }
+  ],
+  "pilot_shared_images": 27,
+  "cross_review_images": 120,
+  "upright_derivatives": 41,
+  "completed_annotations": 0,
+  "approved_annotations": 0,
+  "source_manifest_sha256": "2b6630b8c98a32666cd4d005fc77f83b5da4367ab628a4f5b2c16f4bd8318c0e",
+  "selected_attributes_sha256": "c8b380d982d8dee80d5640ba0e4800e0c82674dae6c4545a546f5b38c195c9ee",
+  "originals_modified": false
+}

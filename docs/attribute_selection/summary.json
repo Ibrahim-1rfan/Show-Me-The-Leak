@@ -1,0 +1,73 @@
+{
+  "annotation_count": 10000,
+  "usable_images": 9996,
+  "issues": 4,
+  "safe_conflicts": 10,
+  "selected_count": 1200,
+  "composition": {
+    "general": 840,
+    "document": 360
+  },
+  "splits": {
+    "train": 960,
+    "validation": 240
+  },
+  "seed": 421,
+  "excluded_benchmark_ids": 50,
+  "blocked_duplicate_groups": 50,
+  "duplicate_groups": 2,
+  "near_duplicate_review_complete": false,
+  "training_ready": false,
+  "reported_total": 9999,
+  "report_count_disagreements": {
+    "a1_age_approx": {
+      "reported": 3997,
+      "reconstructed": 3998
+    },
+    "a2_weight_approx": {
+      "reported": 2192,
+      "reconstructed": 2193
+    },
+    "a3_height_approx": {
+      "reported": 1694,
+      "reconstructed": 1695
+    },
+    "a4_gender": {
+      "reported": 4624,
+      "reconstructed": 4625
+    },
+    "a5_eye_color": {
+      "reported": 2754,
+      "reconstructed": 2755
+    },
+    "a6_hair_color": {
+      "reported": 4404,
+      "reconstructed": 4405
+    },
+    "a9_face_complete": {
+      "reported": 3483,
+      "reconstructed": 3484
+    },
+    "a11_tattoo": {
+      "reported": 179,
+      "reconstructed": 180
+    },
+    "a12_semi_nudity": {
+      "reported": 587,
+      "reconstructed": 588
+    },
+    "a16_race": {
+      "reported": 4320,
+      "reconstructed": 4321
+    },
+    "a17_color": {
+      "reported": 4709,
+      "reconstructed": 4710
+    }
+  },
+  "input_hashes": {
+    "attributes.tsv": "8702a024cc37731fbb52cabcd0c8d7204a6c43c7b407ceecaa74de53fcbfad5c",
+    "Images Classification.txt": "ea1fdb6f70eaf6462d78e4deba0ec29de50c5bb19106e9ca2a910378a5938666",
+    "configs/selection.json": "e9f1c00e945fee45c12fa2f07c7d8be2e9fab7ae233a7465b2c3af293b922a28"
+  }
+}

@@ -1,9 +1,9 @@
 # Project tracker
 
-## Current handoff status — 21 October 2026
+## Current handoff status â€” 21 October 2026
 
-Read [README](README.md) → [GUIDE](GUIDE.md) → [BENCHMARK_REPORT](BENCHMARK_REPORT.md).
-Sections A–K below are dated historical records; **Section L supersedes their
+Read [README](README.md) â†’ [GUIDE](GUIDE.md) â†’ [BENCHMARK_REPORT](BENCHMARK_REPORT.md).
+Sections Aâ€“K below are dated historical records; **Section L supersedes their
 coverage, model-status and archive-presence statements**. Section M records the
 subsequently authorized filesystem cleanup. The handoff is local;
 no commit/push or model training has been performed.
@@ -168,10 +168,10 @@ or cleanup until valid results and verified Drive backup exist. No fresh GPU
 quality or runtime improvement has been claimed in this session.
 ### Image-size decision (2026-10-21)
 
-All 25 documents are JPEG, 480–3648 pixels wide and 328–2448 high. General images
-are JPEG/MPO, 402–5616 wide and 468–5184 high. The baseline 1280 cap downsizes 9
+All 25 documents are JPEG, 480â€“3648 pixels wide and 328â€“2448 high. General images
+are JPEG/MPO, 402â€“5616 wide and 468â€“5184 high. The baseline 1280 cap downsizes 9
 documents and 16 general images. Original bytes and original-resolution redaction
-remain authoritative. Florence's pinned processor resizes to 768×768; the native
+remain authoritative. Florence's pinned processor resizes to 768Ã—768; the native
 processor behavior is recorded rather than hidden by a nominal common cap.
 
 Default baseline is retained. Processor-native (`max_input_edge=None`) and bounded
@@ -223,30 +223,30 @@ is the full request; execution 20 resumes that same OCR run. The VLM execution
 counters are cleared but its saved outputs confirm resuming the full request at
 00:27:54 UTC. Its outputs were checked independently of the cleared counters.
 
-- RUN-01 — Same displayed results. Confirmed cause: pilot/full blocked by initial
+- RUN-01 â€” Same displayed results. Confirmed cause: pilot/full blocked by initial
   quality checks, stable protocol run ID, reports over old single outputs. Fix in
   progress: unique execution/artifact run, explicit plan/manifest/reconciliation,
   diagnostic pilot independent of single-image recall. Validation pending.
-- VIEW-01 — Section 8 always resets INSPECT_INDEX=0 and reads only saved records.
+- VIEW-01 â€” Section 8 always resets INSPECT_INDEX=0 and reads only saved records.
   No interactive navigation or missing-image inventory. Viewer replacement pending.
-- MODEL-01 — Qwen3 produces three retained regions and two invalid attribute IDs
+- MODEL-01 â€” Qwen3 produces three retained regions and two invalid attribute IDs
   (`a10_face_complete`). Partial, not complete redaction. Prompt/quality issue
   remains under investigation; no silent label remapping.
-- MODEL-02 — Qwen2.5 emits a genuine empty JSON response (11 tokens, not truncated).
+- MODEL-02 â€” Qwen2.5 emits a genuine empty JSON response (11 tokens, not truncated).
   No mask changes. Detection failure remains unresolved. T4 native precision check
   is being corrected: logged BF16 can include emulation; no speed/quality claim yet.
-- MODEL-03 — Llama still fails model download with gated-repository HTTP 401.
+- MODEL-03 â€” Llama still fails model download with gated-repository HTTP 401.
   Requires the user's authorized HF account; not fixed by package installation.
-- MODEL-04 — Florence reaches its 1,023-token decoder budget with repetitive text
+- MODEL-04 â€” Florence reaches its 1,023-token decoder budget with repetitive text
   and zero spatial regions on L4. Parsing correctly rejects this generation.
   Underlying generation quality unresolved; FP32/crop diagnostics require GPU.
-- MODEL-05 — Chandra now downloads/loads/runs, returning six Image descriptions,
+- MODEL-05 â€” Chandra now downloads/loads/runs, returning six Image descriptions,
   zero OCR text regions; they are deliberately not treated as literal text evidence.
   Empty redaction is a detection limitation, not a fresh download failure.
-- MODEL-06 — dots now downloads/loads/runs, returning six Picture blocks with no
+- MODEL-06 â€” dots now downloads/loads/runs, returning six Picture blocks with no
   text. The previous processor import repair is GPU-confirmed by this export.
   Text recognition/redaction on this photograph still fails.
-- SAVE-01 — Per-image coordinate/save exceptions can terminate the model loop.
+- SAVE-01 â€” Per-image coordinate/save exceptions can terminate the model loop.
   Per-image recovery and early raw-output persistence are being added; tests pending.
 
 No GPU reruns, cloud uploads, cleanup or model substitutions have been performed
@@ -284,7 +284,7 @@ locally. Existing mounted-Drive authentication/destination remain unchanged.
 |---|---|---|
 | RUN-01 | Later stages were blocked while the same artifact folder/report stayed visible. Fresh runs, explicit plans, immutable execution history, live mode selector, scoped reports and reconciliation added. Pilot no longer requires good single-image recall. | Offline mode/reuse/gate tests passed; full GPU benchmark NOT completed. |
 | VIEW-01 | Fixed INSPECT_INDEX=0 had no navigation and ignored missing images. Replaced with run/model/category/image selectors, Previous/Next/jump, three image panels, raw/error and mask tabs. | Actual ipywidgets control tests passed, including default selection and switching runs. New Colab UI run still pending. |
-| SAVE-01 | Conversion/save failures could terminate the loop and lose raw output. Raw is now saved first; individual errors are stage-labelled; inference-attempt state survives interruption. | Invalid-coordinate → next valid image and interrupted-attempt tests passed. |
+| SAVE-01 | Conversion/save failures could terminate the loop and lose raw output. Raw is now saved first; individual errors are stage-labelled; inference-attempt state survives interruption. | Invalid-coordinate â†’ next valid image and interrupted-attempt tests passed. |
 | MODEL-01 | Qwen3 used two invalid taxonomy IDs. Optional bounded model-authored correction preserves accepted detections and rejected geometry. | Correct/empty/changed-box correction tests passed. Fresh GPU correction quality UNVERIFIED. |
 | MODEL-02 | Empty Qwen2.5 JSON is a detection miss, not truncation. T4 BF16 support check could select emulation; native FP16 now selected. | Hardware-stub test passed. Empty response cause/quality remains UNDER INVESTIGATION. |
 | MODEL-03 | Llama gated repository HTTP 401. | BLOCKED on user's HF account authorization; no model substitution or quality score. |
@@ -305,7 +305,7 @@ new `progress`, `image_execution`, `hardware`, `viewer`; notebook/recovery build
 new audit script and execution tests; existing notebooks, README, tracker and
 recovery documentation. Historical model outputs and source snapshots remain intact.
 
-Next: open the existing category notebook; Sections 1–4 then 8 can inspect saved
+Next: open the existing category notebook; Sections 1â€“4 then 8 can inspect saved
 Drive runs without inference. Use the live pilot selector for the four-image
 diagnostic. Review all four outputs before full; do not mistake mechanics passing
 for complete PII removal. Isolate Florence FP32 and then crop experiments, resolve
@@ -325,7 +325,7 @@ its final backup records 84 run files at 00:28:05 UTC. OCR records 93 files at
 
 ## L. Final export audit and GitHub handoff (2026-10-21)
 
-HANDOFF-01 — Planned/in progress: audit newly supplied single/pilot/full evidence,
+HANDOFF-01 â€” Planned/in progress: audit newly supplied single/pilot/full evidence,
 verify metrics and reviews, investigate Florence/Llama, and update README, GUIDE,
 BENCHMARK_REPORT and this tracker with distinct responsibilities. Preserve received
 executed notebooks before producing clean entry points. Inventory cleanup candidates
@@ -335,7 +335,7 @@ New imports: OCR 055306013536Z and 073101588696Z; VLM 055302824843Z and
 used as current coverage. Two tracked ZIP deletions already existed on arrival
 (results.zip, results_ocr.zip); do not attribute them to this audit.
 
-HANDOFF-02 — In progress: consolidate .gitignore, preserve received notebooks and
+HANDOFF-02 â€” In progress: consolidate .gitignore, preserve received notebooks and
 replace active entry points with clean generated copies (empty reviews, single
 mode). Remove generated output/ and outputs/ from the Git index only; keep their
 local files and historical Git objects. This is repository hygiene, not permanent
@@ -418,3 +418,246 @@ if retaining them in future comparisons. Current outcomes do not justify rerunni
 all completed models or claiming complete privacy removal.
 
 
+## M. Authorized disposable-file cleanup â€” 21 October 2026
+
+Status: completed. The user explicitly requested deletion of old unimportant
+files while retaining the GitHub handoff. Removed 25,184 files (294,389,475 bytes,
+294.4 MB) from the exact paths in
+[the deletion record](docs/audit/cleanup_candidates.json). Every target resolved
+inside the workspace; no target or descendant was a reparse point. Both duplicate
+installation logs matched their preserved copies before deletion. Prior full-test
+logs remain under `docs/handoff_20261021/`; the temporary test environment is gone.
+
+Kept all datasets, seven imported benchmark exports, historical outputs, received
+notebooks, diagnostic probes, proposal files and legacy compatibility code at their
+existing paths. These private artifacts remain ignored by Git. No evidence was
+relocated, no benchmark metrics changed, and no commit or push was performed.
+Earlier pending-cleanup statements describe the historical state before this approval.
+
+Validation: rebuilt notebooks/source bundle and passed the targeted
+`NotebookPackaging` test (1 test, 1.668 seconds) before removing the environment.
+The earlier 131-test source-only and fresh-environment results remain valid historical
+evidence; this cleanup did not rerun the full suite or perform GPU inference.
+Recreate a local development environment using GUIDE when tests are needed again.
+Final link, clean-notebook, embedded-source and credential-pattern checks passed
+for all 91 source handoff files. The Git selection contains 92 files (including
+editor settings), no generated/private artifact candidates and no files over 10 MB.
+Both staged and unstaged whitespace checks passed. All ten deletion targets remain
+absent. Remaining research tasks are unchanged from Section L.
+
+## N. Attribute selection and dataset preparation â€” 22 October 2026
+
+In progress: user approved Milestone 1 and requested concurrent classification
+and labeling. Read attributes.tsv and Images Classification.txt. Reconstruct all
+67 positive-label counts from original JSON, recommend 28 labels with explicit
+trade-offs, prepare reproducible provisional splits without altering originals.
+Audit image integrity/duplicates and exclude the fixed benchmark. Image-level
+labels remain original annotations; document type and any future region proposals
+require review. Training remains disabled.
+
+Milestone 1 automated preparation completed locally: 10,000 JSONs inspected,
+9,996 available images decoded and byte/pixel hashed; four missing images recorded,
+ten Safe-plus-private conflicts quarantined, two duplicate-candidate groups found.
+Prepared 1,200 original-label targets (840/360 metadata proxies, 960/240 split,
+120 safe negatives), with regions explicitly null. All 50 benchmark IDs excluded.
+Reviewed all 67 labels and recommended 28, with eight scarce (<50) high-value
+exceptions. See docs/ATTRIBUTE_SELECTION.md and public aggregate JSON/CSV.
+
+Validation: all 1,200 selected targets independently matched their source JSONs,
+image paths exist, IDs and duplicate groups are unique, and the safe-negative
+count is 120. Annotation-count/rank/schema checks passed. Human type review,
+near-duplicate review, sparse validation support and spatial annotations remain
+pending; training stays disabled. No new GPU experiment or model improvement.
+Initial sequential audit was resumed from its cache with concurrent image checks;
+no originals were modified. User edits to check_label_distribution.py were kept.
+
+Cached repeat with seed 421 produced a byte-identical manifest; the final
+script assertions verified benchmark availability and exclusion. Validation
+evidence: docs/attribute_selection/validation.json. No full legacy suite rerun;
+the new workflow was exercised end-to-end twice (second run used image cache).
+
+## O. Three-person manual annotation package — 24 October 2026
+
+In progress: reuse the 1,200 selected images and 28-label taxonomy, preserve
+original image bytes/JSON and train/validation assignments, distribute primary
+work evenly, provide pending canonical templates, a shared pilot and cyclic
+secondary review, operational guidelines, tool configuration and validators.
+No real boxes, completed reviews, training or external uploads will be invented.
+
+Completed: manual_annotation_dataset contains 1,200 byte-identical source-image
+copies and original JSON backups, 1,200 pending templates, three 400-image
+assignments (280 general/120 document, 320 train/80 validation per member), a
+27-image training-only shared pilot with all 28 expected labels, and a 120-image
+cyclic secondary review sample. The initial random pilot covered 24 labels; a
+deterministic coverage-improvement pass preserved its owner/type quotas and
+increased expected-label coverage to 28. Primary ownership did not change.
+
+41 EXIF-oriented images have separate upright PNG annotation views; originals
+remain untouched. Canonical boxes use upright normalized xyxy. Original labels
+are hints; no real boxes or approved labels were generated. Local Label Studio
+configuration/import conversion, schema, four fictional examples and detailed
+per-category rules are provided. No software installation or image upload occurred.
+
+Verification: all 1,200 primary assignments cover the manifest once, image and
+original JSON copy hashes match, 41 upright views match transformed source pixels,
+1,200 templates and four examples pass JSON Schema, and nine focused tests pass
+(invalid geometry, unsupported labels, split/owner preservation, assignment
+balance, export conversion and false-approval prevention). Repeating assignment
+with seed 421 reproduces owners. Current completion is 0/1,200 and approval 0/1,200.
+Public evidence: docs/manual_annotation/validation.json. Full legacy/model tests
+were not rerun; no model runtime changed. Live Label Studio UI compatibility and
+the human pilot remain unverified. Private package is excluded from Git.
+
+## P. Local Label Studio installation — 25 October 2026
+
+Planned: user authorized installing Label Studio and requested guided annotation.
+Create an isolated environment, keep app data private, start localhost only and
+verify startup and the prepared labeling configuration.
+
+Completed: installed Label Studio 1.23.2 in .venv-annotation with Python 3.10.11;
+added requirements-annotation.txt, Start Annotation.cmd and its launcher, plus
+[first-session directions](docs/manual_annotation/FIRST_SESSION.md). App database,
+settings, logs and the installed dependency freeze are under ignored
+data/label_studio, outside the served manual_annotation_dataset image directory.
+
+Verification: pip check reports no broken requirements; the installed backend's
+validate_label_config accepted the prepared XML; /health returned HTTP 200; the
+browser displayed the local login page with a Sign up link. The binding flag is
+--internal-host 127.0.0.1 (--host controls generated URLs). Initial sandbox DNS
+and socket restrictions prevented install/startup; authorized unsandboxed retries
+succeeded. The Google connector dependency warns about Python 3.10 support; no
+Google connector was used. These checks do not validate cloud storage.
+
+Remaining: user creates the local account, imports the 27-image pilot, checks
+image loading/orientation and saves/exports a few annotations before scaling.
+No account, real annotation, approved gold box or human pilot was created by the
+agent. Live project import/export and human annotation remain unverified.
+
+Handoff checks: rebuilt notebook snapshots/source bundle; check_handoff.py passed
+for 123 source files, documentation links, clean notebooks, exact embedded source
+and credential-pattern scan. Git ignores the annotation environment, app database,
+image package and its ZIP; none were deleted. Targeted diff whitespace checks pass.
+
+## Q. Pilot image 404 repair — 25 October 2026
+
+In progress: user imported 27 pilot tasks but all image requests return HTTP 404.
+Source files exist. Installed Label Studio 1.23.2 requires a matching project local
+storage entry as well as the serving environment variables. Investigate and add
+only the image/view folders to the existing project without syncing new tasks;
+verify image responses and preserve existing tasks and annotations.
+
+Confirmed root cause: the installed localfiles_data view requires an authorized
+LocalFilesImportStorage record containing the image directory. Project 1 had none;
+all 27 existing task URLs returned 404. The earlier installation guide omitted
+this required step; the successful health check and XML validation did not test it.
+
+Fix: scripts/configure_annotation_storage.py registers images and annotation_views
+for an explicitly selected existing project. It creates a private SQLite backup,
+validates paths, uses a match-nothing file filter and never syncs tasks. Updated
+FIRST_SESSION, tool_workflow and GUIDE with the required per-project command.
+The first verification attempt closed Django responses inside a transaction,
+which closed its database connection; verification failed and the storage writes
+rolled back. Deferred response cleanup until after commit and retried successfully.
+A sandbox initialization attempt stalled and was interrupted; the authorized
+unsandboxed retry completed. No package reinstall or database deletion was needed.
+
+Verified: project 1 has two storage entries; all 27 installed authenticated-view
+responses changed from 404 to 200 and their bytes match the original files. Task
+IDs/data and annotation records are unchanged; zero tasks synced. Private evidence:
+data/label_studio/storage_verification.json; database backups under
+data/label_studio/backups/. Browser rendering after the user's refresh, drawing,
+submission and export remain pending. No completed gold annotations were created.
+
+## R. Local VISPR application — 26 October 2026
+
+Implemented a separate local app without reorganizing research code, changing
+annotation data, rebuilding notebooks, downloading weights, or replacing the
+user's pre-existing working-tree changes. The canonical source is
+`configs/selected_attributes.json`: all 28 exact IDs/names are loaded directly.
+Architecture was recorded in `ARCHITECTURE.md` before implementation.
+
+Created `src/vispr_app/{server,adapters,pipeline}.py`, package initializer and
+`static/{index.html,style.css,app.js}`; `scripts/start_vispr.py`, `Start VISPR.cmd`,
+`requirements-app.txt`, `requirements-app-model.txt`, `APP_GUIDE.md`,
+`ARCHITECTURE.md`, `tests/test_vispr_app.py` and `tests/vispr_ui_fixture.py`.
+Updated README and ignored `.venv-app/`; existing ignored `data/` holds app data.
+Dependencies declared: FastAPI, Uvicorn, HTTPX, python-multipart and Pillow;
+optional direct-model profile adds Torch, Transformers and Accelerate.
+No packages were installed or upgraded during this task.
+
+Implemented: responsive drag/drop/file-picker queue, five-image default batch,
+format/size/pixel limits, removal/replacement, all 28 searchable privacy switches,
+explicit defaults/reset and disk persistence, immutable per-batch preferences,
+sequential jobs/stages, independent failures, cooperative cancellation, comparison
+views, optional prediction overlays, grouped/individual detections, incomplete
+localization warnings, PNG/ZIP downloads and session cleanup. Black opaque masks
+modify saved pixels; optional margin is 0–20 pixels. Saved PNGs are reopened and
+exactly compared, EXIF stripped, orientation applied and alpha composited to avoid
+revealing invisible RGB payloads. Blur/pixelation are not implemented.
+
+Privacy: default loopback binding, loopback-only model URLs, disabled HTTP proxies
+and redirects, no CORS permissions, Host checks, same-origin mutation validation
+and process token, offline Transformers flags/local-only files, no remote code,
+no raw prediction/image logging and no automatic cloud/model fallback. UNC and
+mapped network checkpoint drives are rejected. Optional LM Studio auth comes
+only from `VISPR_LM_TOKEN`, never browser settings. No online preprocessing exists.
+
+Model inspection: LM Studio installed; its CLI said server stopped. Standard
+Qwen3-VL-8B model/projector files are partial downloads. Qwen2.5-VL is locally
+present but was not substituted. No complete Qwen3-VL Transformers checkpoint
+was found in the standard cache. Hardware: 15.7 GiB RAM, Intel UHD Graphics with
+reported 1 GiB adapter RAM, no CUDA. Existing global Torch 2.4.1 / Transformers
+5.2.0 is unsuitable for this direct profile; Transformers import also fails with
+a Hugging Face Hub version conflict. Use a separate environment. A smaller
+quantized Qwen3-VL 2B plus projector is a candidate, not a measured supported
+configuration. Native LM Studio metadata and schema APIs were checked against
+official docs (links in APP_GUIDE). Real localization remains untested.
+
+Adapters: LM Studio loaded vision metadata checks plus image/JSON schema requests;
+direct local Qwen3-VL loading/generation and a separate fine-tuned mode for complete
+merged checkpoints. Direct and fine-tuned real inference were not run. Unmerged
+LoRA adapters, automatic grounding alternatives and real-model accuracy validation
+remain outside this implementation. Invalid boxes are reported, never fabricated.
+
+Validation performed:
+
+- Final focused suite: **25/25 passed**, 6.379 seconds. Synthetic images/fake
+  adapters only; tests exercise uploads, limits, per-image failures, cancellation,
+  duplicate submissions, personalization/reset/persistence/snapshots, overlapping
+  boxes, malformed/nonfinite/out-of-range geometry, exact output pixels,
+  metadata/transparency, ZIP retrieval, loopback/origin/token guards, unavailable
+  models, mocked loaded/text-only LM Studio, redirects and truncation.
+- Full suite earlier in this task: **159 tests, 157 passed, 2 errors**, 58.565
+  seconds. Existing `test_viewer_controls_navigate_model_category_image_and_run`
+  lacks `ipywidgets`; `test_notebooks_parse_and_contain_exact_independent_source`
+  encounters a notebook cell missing `id`. These unrelated notebooks/environment
+  were preserved. Six focused app tests were added after that full run; the
+  final focused suite above includes all 25. Full suite was not rerun afterward.
+- Python compilation and `node --check src/vispr_app/static/app.js` passed.
+  App-scoped `git diff --check` passed. Whole-tree whitespace check reports
+  pre-existing trailing whitespace in `check_label_distribution.py`, untouched.
+- Live browser: multi-file upload with two generated fake-PII images, remove one,
+  per-image failure when LM Studio is unavailable, switch/search/disable/reset,
+  preference persistence after reload, clear session, and mobile viewport with
+  no horizontal overflow. No browser console errors observed in that check.
+- Separate explicit TEST ONLY UI fixture: verified original/output rendering,
+  output-only toggle, overlay hiding, individual confidence/box details, masked
+  name vs allowed email and an explicit missing-box warning. Fixture responses
+  are synthetic and cannot be selected from the normal application.
+
+Development issue: sandboxed Windows asyncio stalled in internal socketpair
+creation. Captured timeout traces established the cause; approved unsandboxed
+tests and server launch succeeded. Stalled task-owned processes were stopped.
+No real PII images were used for application tests. Main server is started via
+`scripts/start_vispr.py` at http://127.0.0.1:8765; startup steps and cleanup policy
+are documented in APP_GUIDE. The UI test helper uses loopback port 8766 and an
+isolated temporary directory, never the real app preferences.
+
+Next steps: manually complete a compatible Qwen3-VL model/projector setup (no
+download consent was assumed), load it in LM Studio and start its local server;
+check the endpoint/model in the app; evaluate synthetic image localization and
+then a human-reviewed held-out set before demonstration. For direct mode, prepare
+the isolated requirements profile and complete local checkpoint. For fine-tuning,
+export a merged checkpoint, validate its output contract and repeat the same
+localization tests. Repair legacy test dependencies/notebook IDs separately,
+preserving experimental outputs and the team's annotation work.

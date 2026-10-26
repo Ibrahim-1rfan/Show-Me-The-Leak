@@ -22,13 +22,14 @@ SECRET = re.compile(rb'hf_[A-Za-z0-9]{15,}|AIza[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Z
 
 
 def source_files(root):
-    files = [*root.glob('*.md'), root / '.gitignore', root / 'requirements-dev.txt',
-             root / 'Model_Testing.ipynb', *root.glob('benchmark_*.py')]
+    files = [*root.glob('*.md'), root / '.gitignore', root / 'requirements-dev.txt', root / 'requirements-annotation.txt',
+             root / 'Model_Testing.ipynb', root / 'Start Annotation.cmd', *root.glob('benchmark_*.py')]
     files += [root / name for name in ['apply_crosswalk.py', 'check_category_distribution.py',
         'check_label_distribution.py', 'reconcile_vispr.py', 'taxonomy_crosswalk.csv',
         'manifest.csv', 'manifest_with_categories.csv', 'duplicate_groups.csv', 'issues_report.csv']]
     for folder in ['src', 'scripts', 'tests', 'tools']:
         files += [p for p in (root / folder).rglob('*.py') if '__pycache__' not in p.parts]
+    files += [root / 'attributes.tsv', root / 'Images Classification.txt', *list((root / 'docs/attribute_selection').glob('*')), *list((root / 'docs/manual_annotation').glob('*'))]
     files += list((root / 'configs').glob('*')) + list((root / 'notebooks').glob('*.ipynb'))
     files += list((root / 'docs').glob('*.md')) + list((root / 'docs/audit').glob('*.json'))
     return sorted(set(p for p in files if p.is_file()))

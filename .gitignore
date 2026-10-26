@@ -44,3 +44,10 @@ output/
 *.pt
 *.pth
 /20*T*Z/
+
+# Private manual annotation images, exports and reviews
+/manual_annotation_dataset/
+/manual_annotation_dataset.zip
+
+/.venv-annotation/
+/.venv-app/

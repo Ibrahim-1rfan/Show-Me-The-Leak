@@ -1,0 +1,29 @@
+attribute_id,name,member_1,member_2,member_3
+a7_fingerprint,Fingerprint,8,7,8
+a8_signature,Signature,47,48,47
+a9_face_complete,Face (Complete),148,148,147
+a10_face_partial,Face (Partial),112,112,113
+a11_tattoo,Tattoo,40,40,39
+a19_name_full,Full Name,101,100,101
+a20_name_first,First Name,29,29,29
+a21_name_last,Last Name,28,28,28
+a24_birth_date,Date of Birth,23,22,23
+a29_ausweis,National Identification,6,5,6
+a30_credit_card,Credit Card,12,12,13
+a31_passport,Passport,20,19,19
+a32_drivers_license,Drivers License,9,9,9
+a33_student_id,Student ID,10,10,11
+a35_mail,Mail,19,20,19
+a37_receipt,Receipts,22,22,21
+a38_ticket,Tickets,27,29,25
+a49_phone,Phone number,27,28,28
+a73_landmark,Visited Landmark or Street Sign,94,96,95
+a74_address_current_complete,Visited Location (Complete),22,22,22
+a75_address_current_partial,Visited Location (Partial),123,121,123
+a78_address_home_complete,Home address (Complete),13,14,13
+a79_address_home_partial,Home address (Partial),7,7,7
+a82_date_time,Date/Time of Activity,126,127,129
+a85_username,Username,18,18,17
+a90_email,Email address,13,13,13
+a103_license_plate_complete,License Plate (Complete),38,38,38
+a104_license_plate_partial,License Plate (Partial),29,29,29

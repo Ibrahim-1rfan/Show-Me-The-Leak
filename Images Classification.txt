@@ -1,0 +1,147 @@
+Total images in manifest: 9999
+
+Safe (a0_safe only):    3701  (37.0%)
+Unsafe (>=1 attribute): 6298  (63.0%)
+(Reference paper: ~4,991/7,977 private ≈ 62.6% unsafe on the full VISPR test set)
+
+Total unique attribute labels seen: 68
+Avg labels/image (all):    5.18
+Avg labels/image (unsafe): 7.64
+Max labels on one image:   17
+
+Top 20 most frequent attributes:
+   4709  ( 47.1%)  a17_color
+   4624  ( 46.2%)  a4_gender
+   4404  ( 44.0%)  a6_hair_color
+   4320  ( 43.2%)  a16_race
+   3997  ( 40.0%)  a1_age_approx
+   3711  ( 37.1%)  a0_safe
+   3483  ( 34.8%)  a9_face_complete
+   2789  ( 27.9%)  a10_face_partial
+   2754  ( 27.5%)  a5_eye_color
+   2192  ( 21.9%)  a2_weight_approx
+   1694  ( 16.9%)  a3_height_approx
+    919  (  9.2%)  a57_culture
+    889  (  8.9%)  a73_landmark
+    844  (  8.4%)  a46_occupation
+    810  (  8.1%)  a75_address_current_partial
+    761  (  7.6%)  a82_date_time
+    694  (  6.9%)  a65_rel_social
+    658  (  6.6%)  a68_rel_spectators
+    651  (  6.5%)  a66_rel_professional
+    587  (  5.9%)  a12_semi_nudity
+
+Bottom 20 rarest attributes (long-tail / imbalance check):
+     20  (  0.2%)  a29_ausweis
+     21  (  0.2%)  a79_address_home_partial
+     21  (  0.2%)  a13_full_nudity
+     22  (  0.2%)  a99_legal_involvement
+     24  (  0.2%)  a7_fingerprint
+     28  (  0.3%)  a32_drivers_license
+     30  (  0.3%)  a92_email_content
+     30  (  0.3%)  a23_birth_city
+     32  (  0.3%)  a43_medicine
+     33  (  0.3%)  a33_student_id
+     36  (  0.4%)  a62_opinion_political
+     40  (  0.4%)  a90_email
+     41  (  0.4%)  a78_address_home_complete
+     46  (  0.5%)  a30_credit_card
+     53  (  0.5%)  a85_username
+     63  (  0.6%)  a97_online_conversation
+     67  (  0.7%)  a74_address_current_complete
+     68  (  0.7%)  a102_vehicle_ownership
+     71  (  0.7%)  a35_mail
+     72  (  0.7%)  a24_birth_date
+
+
+
+Avg categories/image: 2.19
+Max categories on one image: 7
+
+Category frequency (sorted by count):
+   4962  ( 49.6%)  Biometric Data
+   4925  ( 49.3%)  Personal Metadata
+   3711  ( 37.1%)  Safe
+   2631  ( 26.3%)  Personal Context
+   1488  ( 14.9%)  Location Identifiers
+    857  (  8.6%)  Legal Identifiers
+    806  (  8.1%)  GPS Data
+    756  (  7.6%)  Background Individuals
+    624  (  6.2%)  Legal Sensitivity Info
+    388  (  3.9%)  Financial Information
+    327  (  3.3%)  Vehicle Information
+    272  (  2.7%)  HIPAA Data
+    198  (  2.0%)  Digital Identifiers
+
+
+
+Distribution as a whole
+
+Top 67 most frequent attributes:
+ 1   4709  ( 47.1%)  a17_color
+ 2   4624  ( 46.2%)  a4_gender
+ 3   4404  ( 44.0%)  a6_hair_color
+ 4   4320  ( 43.2%)  a16_race
+ 5   3997  ( 40.0%)  a1_age_approx
+ 6   3711  ( 37.1%)  a0_safe
+ 7   3483  ( 34.8%)  a9_face_complete
+ 8   2789  ( 27.9%)  a10_face_partial
+ 9   2754  ( 27.5%)  a5_eye_color
+ 10   2192  ( 21.9%)  a2_weight_approx
+ 11   1694  ( 16.9%)  a3_height_approx
+ 12    919  (  9.2%)  a57_culture
+ 13    889  (  8.9%)  a73_landmark
+ 14    844  (  8.4%)  a46_occupation
+ 15    810  (  8.1%)  a75_address_current_partial
+ 16    761  (  7.6%)  a82_date_time
+ 17    694  (  6.9%)  a65_rel_social
+ 18    658  (  6.6%)  a68_rel_spectators
+ 19    651  (  6.5%)  a66_rel_professional
+ 20    587  (  5.9%)  a12_semi_nudity
+ 21    542  (  5.4%)  a19_name_full
+ 22    438  (  4.4%)  a69_rel_views
+ 23    382  (  3.8%)  a59_sports
+ 24    365  (  3.7%)  a48_occassion_work
+ 25    337  (  3.4%)  a61_opinion_general
+ 26    334  (  3.3%)  a64_rel_personal
+ 27    267  (  2.7%)  a26_handwriting
+ 28    250  (  2.5%)  a38_ticket
+ 29    208  (  2.1%)  a56_sexual_orientation
+ 30    207  (  2.1%)  a103_license_plate_complete
+ 31    179  (  1.8%)  a11_tattoo
+ 32    175  (  1.8%)  a8_signature
+ 33    174  (  1.7%)  a18_ethnic_clothing
+ 34    167  (  1.7%)  a41_injury
+ 35    166  (  1.7%)  a58_hobbies
+ 36    144  (  1.4%)  a67_rel_competitors
+ 37    127  (  1.3%)  a31_passport
+ 38    114  (  1.1%)  a55_religion
+ 39    112  (  1.1%)  a25_nationality
+ 40     99  (  1.0%)  a37_receipt
+ 41     98  (  1.0%)  a70_education_history
+ 42     96  (  1.0%)  a20_name_first
+ 43     89  (  0.9%)  a104_license_plate_partial
+ 44     87  (  0.9%)  a60_occassion_personal
+ 45     85  (  0.9%)  a21_name_last
+ 46     83  (  0.8%)  a49_phone
+ 47     79  (  0.8%)  a27_marital_status
+ 48     76  (  0.8%)  a39_disability_physical
+ 49     72  (  0.7%)  a24_birth_date
+ 50     71  (  0.7%)  a35_mail
+ 51     68  (  0.7%)  a102_vehicle_ownership
+ 52     67  (  0.7%)  a74_address_current_complete
+ 53     63  (  0.6%)  a97_online_conversation
+ 54     53  (  0.5%)  a85_username
+ 55     46  (  0.5%)  a30_credit_card
+ 56     41  (  0.4%)  a78_address_home_complete
+ 57     40  (  0.4%)  a90_email
+ 58     36  (  0.4%)  a62_opinion_political
+ 59     33  (  0.3%)  a33_student_id
+ 60     32  (  0.3%)  a43_medicine
+ 61     30  (  0.3%)  a92_email_content
+ 62     30  (  0.3%)  a23_birth_city
+ 63     28  (  0.3%)  a32_drivers_license
+ 64     24  (  0.2%)  a7_fingerprint
+ 65     22  (  0.2%)  a99_legal_involvement
+ 66     21  (  0.2%)  a79_address_home_partial
+ 67     21  (  0.2%)  a13_full_nudity

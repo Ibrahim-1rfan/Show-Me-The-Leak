@@ -1,5 +1,23 @@
 # Show Me the Leak
 
+## Local image review application
+
+The new VISPR app provides a local browser UI and Python backend for small image
+batches, the canonical 28 privacy switches, model-prediction review, verified
+opaque pixel masks, and PNG/ZIP downloads. It uses only local inference and has
+no cloud fallback. Start with `python scripts/start_vispr.py` after installing
+`requirements-app.txt` in a separate environment, then open
+http://127.0.0.1:8765. Windows users can run `Start VISPR.cmd`.
+
+See [APP_GUIDE.md](APP_GUIDE.md) for installation, LM Studio, direct local
+Qwen3-VL, future merged fine-tuned checkpoints, privacy controls and cleanup;
+[ARCHITECTURE.md](ARCHITECTURE.md) describes the implementation.
+
+The application pipeline is tested with synthetic images. **Real Qwen3-VL
+localization remains unverified:** the inspected LM Studio server was stopped,
+its Qwen3-VL downloads incomplete, and no compatible direct checkpoint was found.
+No weights are downloaded automatically. Review every result before sharing.
+
 Show Me the Leak evaluates whether open vision-language models (VLMs) and OCR
 models can locate private information in images and hide it with bounding-box
 redaction. It compares predictions with VISPR image labels and preserves raw
@@ -47,3 +65,7 @@ Local development: install `requirements-dev.txt`, run
 `python scripts/build_notebooks.py`, then `python -m unittest discover -s tests -v`. GPU inference targets Linux/Colab;
 training remains disabled. No credentials, model weights or dataset images are
 required in a source checkout.
+
+Dataset preparation and the proposed 28-label scope: [attribute selection](docs/ATTRIBUTE_SELECTION.md).
+
+Manual annotation by three team members: [start here](docs/manual_annotation/START_HERE.md), then follow the [Label Studio first session](docs/manual_annotation/FIRST_SESSION.md). The private image package is generated locally and excluded from Git.

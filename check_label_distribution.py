@@ -50,10 +50,14 @@ def main():
         print(f"Avg labels/image (unsafe): {sum(unsafe_counts)/len(unsafe_counts):.2f}")
     print(f"Max labels on one image:   {max(labels_per_image)}\n")
 
-    print("Top 20 most frequent attributes:")
-    for label, count in label_counter.most_common(20):
+    i = 1
+    print("Top 67 most frequent attributes:")
+    for label, count in label_counter.most_common(67):
         pct = 100 * count / total
-        print(f"  {count:5d}  ({pct:5.1f}%)  {label}")
+       
+        
+        print( f" {i}  {count:5d}  ({pct:5.1f}%)  {label}")
+        i += 1 
 
     print("\nBottom 20 rarest attributes (long-tail / imbalance check):")
     rarest = sorted(label_counter.items(), key=lambda x: x[1])[:20]

@@ -240,3 +240,15 @@ locally when needed; do not force-add them. Legacy root helpers remain because
 compatibility tests use them. Disposable verification environments and caches
 were deleted after testing; recreate your environment from `requirements-dev.txt`.
 See [cleanup decisions](docs/AUDIT_AND_MIGRATION.md) for the exact scope.
+
+## Training-data preparation
+
+Run [04_dataset_preparation](notebooks/04_dataset_preparation.ipynb) on a checkout with the original image/JSON pairs, or run `python scripts/prepare_training_data.py --root .`. Read [attribute selection](docs/ATTRIBUTE_SELECTION.md) before interpreting the provisional labels and splits. This is CPU data preparation; no model training is launched.
+
+## Three-member manual annotation
+
+Use the existing prepared 1,200-image manifest and 28-label taxonomy; do not repeat selection. Run `python scripts/prepare_manual_annotation.py` once to create the private `manual_annotation_dataset/`. It refuses an existing destination to protect manual work. Source images/JSON remain untouched. [Instructions](docs/manual_annotation/START_HERE.md), [category and box rules](docs/manual_annotation/annotation_guidelines.md), [tool workflow](docs/manual_annotation/tool_workflow.md) and [training gaps](docs/manual_annotation/TRAINING_GAPS.md) describe the process.
+
+Run `python scripts/validate_manual_annotation.py` for assignment coverage, copy hashes and available annotation checks. Initially all 1,200 completed records are missing by design; structural success is not annotation completion. `--require-complete` requires every record independently approved. Imported exports remain needs_review. The user imported 27 pilot tasks into local project 1; human pilot completion remains pending. Preserve the original train/validation split, exclude the fixed 50 benchmark images, and keep uncertain cases out of localization training.
+
+Local installation update (25 October 2026): Label Studio 1.23.2 is installed separately. Launch `Start Annotation.cmd`; follow [your first session](docs/manual_annotation/FIRST_SESSION.md), including the required per-project image-storage registration. Missing registration returns image 404s even when files exist. The app database is in ignored `data/label_studio/`; the image root is `manual_annotation_dataset/`. Human annotation/export validation remains pending.

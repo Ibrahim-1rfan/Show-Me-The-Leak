@@ -19,8 +19,9 @@ license review and a real forward/backward smoke test pass.
 
 The [Qwen card](https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct) declares Apache 2.0
 (checked 2026-10-21). Preserve pinned checkpoint/license notices and review dataset
-rights separately. Proposed method: supervised LoRA or QLoRA for explicit PII label
-and bounding-box output, with exact JSON/schema and image-token alignment. The
+rights separately. Initial proposed method: supervised LoRA or QLoRA for image-level PII labels
+using the 28-label selection. Bounding-box supervision is deferred until independent
+reviewed regions exist. Preserve exact JSON/schema and image-token alignment. The
 [PEFT quantization guide](https://huggingface.co/docs/peft/developer_guides/quantization)
 supports adapter training on quantized bases in compatible architectures; it does
 not prove this project's Qwen3 collator or target modules work. Training dependencies
@@ -99,3 +100,5 @@ new untouched test set; report coverage/failures, paired label metrics, per-cate
 misses, localization and retained readable PII where independent references support
 those claims. Use validation only for tuning. A gain on this repeatedly reviewed
 50-image cohort alone is insufficient evidence of improvement.
+
+Preparation update, 22 October 2026: [attribute-selection report](ATTRIBUTE_SELECTION.md) defines the 28-label first experiment. Prepared manifests are provisional; preparation alone does not satisfy training gates.

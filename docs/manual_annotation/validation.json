@@ -1,0 +1,19 @@
+{
+  "images": 1200,
+  "completed_records": 0,
+  "approved_records": 0,
+  "missing_completed": 1200,
+  "errors": [],
+  "structural_checks_passed": true,
+  "human_annotation_complete": false,
+  "date": "2026-10-24",
+  "unit_tests_passed": 9,
+  "json_schema_templates_checked": 1200,
+  "fictional_examples_checked": 4,
+  "upright_views_pixel_verified": 41,
+  "assignment_repeat_matches": true,
+  "pilot_training_only": true,
+  "pilot_expected_category_coverage": 28,
+  "live_annotation_tool_tested": false,
+  "training_started": false
+}
